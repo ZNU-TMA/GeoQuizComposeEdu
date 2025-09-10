@@ -3,4 +3,10 @@
     <string name="true_button">Так</string>
     <string name="false_button">Ні</string>
     <string name="next_button">Далі</string>
+    <string name="question_australia">Канберра - це столиця Австралії</string>
+    <string name="question_oceans">Тихий океан більший, аніж Атлантичний океан</string>
+    <string name="question_mideast">Суецький канал поєднує Червоне море та Індійський океан</string>
+    <string name="question_africa">Витік річки Ніл знаходиться в Єгипті</string>
+    <string name="question_americas">Амазонка є найдовшою річкою у Америці</string>
+    <string name="question_asia">Озеро Байкал є найстарішим та найглибшим прісноводним озером</string>
 </resources>

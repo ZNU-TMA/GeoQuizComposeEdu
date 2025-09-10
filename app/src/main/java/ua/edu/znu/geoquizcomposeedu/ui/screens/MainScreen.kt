@@ -2,6 +2,7 @@ package ua.edu.znu.geoquizcomposeedu.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,17 +20,19 @@ import androidx.compose.ui.unit.dp
 import ua.edu.znu.geoquizcomposeedu.R
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    innerPadding: PaddingValues,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(innerPadding),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome to GeoQuiz!",
-            modifier = Modifier.padding(16.dp)
+            text = stringResource(id = R.string.question_australia),
+            modifier = Modifier.padding(innerPadding)
         )
         Row(
             modifier = Modifier.size(height = 90.dp, width = 200.dp),
@@ -55,5 +58,8 @@ fun MainScreen() {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen()
+
+    val innerPadding = PaddingValues(16.dp)
+
+    MainScreen(innerPadding)
 }
