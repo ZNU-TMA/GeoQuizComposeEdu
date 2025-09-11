@@ -18,11 +18,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.edu.znu.geoquizcomposeedu.R
+import ua.edu.znu.geoquizcomposeedu.model.Question
 
 @Composable
 fun MainScreen(
     innerPadding: PaddingValues,
 ) {
+    val questionBank = listOf(
+        Question(R.string.question_australia, true),
+        Question(R.string.question_oceans, true),
+        Question(R.string.question_mideast, false),
+        Question(R.string.question_africa, false),
+        Question(R.string.question_americas, true),
+        Question(R.string.question_asia, true)
+    )
+
+    var currentIndex = 0
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,7 +43,7 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.question_australia),
+            text = stringResource(id = questionBank[currentIndex].textResId),
             modifier = Modifier.padding(innerPadding)
         )
         Row(
