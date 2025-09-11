@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +25,14 @@ import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.model.Question
 
 private const val TAG = "MainScreen"
+
+/*When state defined bymore than one parameter wee need data class.
+* Now we remain the one parameter for simplicity.*/
+data class MainScreenState(
+    // currentIndex is mutable - Compose does not recompose UI
+    // because of state object was not changed
+    var currentIndex: Int = 0
+)
 
 @Composable
 fun MainScreen(
@@ -39,8 +47,8 @@ fun MainScreen(
         Question(R.string.question_asia, true)
     )
 
-//    var currentIndex = 0
-    val currentIndexState = remember { mutableIntStateOf(0) }
+//    val currentIndexState = remember { mutableIntStateOf(0) }
+    val currentIndexState = remember { mutableStateOf(MainScreenState()) }
 
     Column(
         modifier = Modifier
@@ -50,7 +58,7 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = questionBank[currentIndexState.intValue].textResId),
+            text = stringResource(id = questionBank[currentIndexState.value.currentIndex].textResId),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(innerPadding)
@@ -72,8 +80,9 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-            currentIndexState.intValue = ++currentIndexState.intValue % questionBank.size
-            Log.d(TAG, "MainScreen: currentIndex = ${currentIndexState.intValue}")
+            currentIndexState.value.currentIndex =
+                ++currentIndexState.value.currentIndex % questionBank.size
+            Log.d(TAG, "MainScreen: currentIndex = ${currentIndexState.value.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
         }
