@@ -31,7 +31,9 @@ private const val TAG = "MainScreen"
 data class MainScreenState(
     // currentIndex is mutable - Compose does not recompose UI
     // because of state object was not changed
-    var currentIndex: Int = 0
+//    var currentIndex: Int = 0
+    // now currentIndex is immutable
+    val currentIndex: Int = 0
 )
 
 @Composable
@@ -47,7 +49,6 @@ fun MainScreen(
         Question(R.string.question_asia, true)
     )
 
-//    val currentIndexState = remember { mutableIntStateOf(0) }
     val currentIndexState = remember { mutableStateOf(MainScreenState()) }
 
     Column(
@@ -76,12 +77,15 @@ fun MainScreen(
             Button(onClick = { /*TODO*/ }) {
                 Text(stringResource(id = R.string.false_button))
             }
-
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-            currentIndexState.value.currentIndex =
-                ++currentIndexState.value.currentIndex % questionBank.size
+            // We need to create new state object for Compose to recompose UI
+            val state = currentIndexState.value
+            val newState = state.copy(
+                currentIndex = (state.currentIndex + 1) % questionBank.size
+            )
+            currentIndexState.value = newState
             Log.d(TAG, "MainScreen: currentIndex = ${currentIndexState.value.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
