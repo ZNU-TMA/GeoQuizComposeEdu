@@ -1,5 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.model.Question
+
+private const val TAG = "MainScreen"
 
 @Composable
 fun MainScreen(
@@ -33,7 +38,8 @@ fun MainScreen(
         Question(R.string.question_asia, true)
     )
 
-    var currentIndex = 0
+//    var currentIndex = 0
+    val currentIndexState = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -43,7 +49,7 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = questionBank[currentIndex].textResId),
+            text = stringResource(id = questionBank[currentIndexState.value].textResId),
             modifier = Modifier.padding(innerPadding)
         )
         Row(
@@ -61,7 +67,10 @@ fun MainScreen(
 
         }
         Spacer(modifier = Modifier.width(16.dp))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            currentIndexState.value = ++currentIndexState.value % questionBank.size
+            Log.d(TAG, "MainScreen: currentIndex = ${currentIndexState.value}")
+        }) {
             Text(stringResource(id = R.string.next_button))
         }
     }
