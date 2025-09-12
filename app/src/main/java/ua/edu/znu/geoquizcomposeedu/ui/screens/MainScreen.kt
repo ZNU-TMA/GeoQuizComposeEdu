@@ -14,7 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,14 +25,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.model.Question
+import java.io.Serializable
 
 private const val TAG = "MainScreen"
 
-/*When state defined by more than one parameter wee need data class.
-* Now we remain the one parameter for simplicity.*/
-//data class MainScreenState(
-//    val currentIndex: Int = 0
-//)
+data class MainScreenState(
+    val currentIndex: Int = 0
+) : Serializable  // If state content are primitive types or String,
+// you can implement Serializable
+// to save and restore state in Bundle
 
 @Composable
 fun MainScreen(
@@ -48,10 +49,7 @@ fun MainScreen(
     )
 
     // Save state in the Bundle across configuration changes
-    // - WILL BE CRUSH because of rememberSavable cannot save custom classes by default.
-    // It can save only types that can be put in a Bundle - primitives and String.
-//    var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
-    var currentIndexState by rememberSaveable { mutableIntStateOf(0) }
+    var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
 
     Column(
         modifier = Modifier
@@ -62,7 +60,7 @@ fun MainScreen(
     ) {
         Text(
             // Use delegate getter for state access
-            text = stringResource(id = questionBank[currentIndexState].textResId),
+            text = stringResource(id = questionBank[mainScreenState.currentIndex].textResId),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(innerPadding)
@@ -84,9 +82,10 @@ fun MainScreen(
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
             // Use delegate getter and setter for state access
-            currentIndexState = (currentIndexState + 1) % questionBank.size
+            mainScreenState =
+                mainScreenState.copy((mainScreenState.currentIndex + 1) % questionBank.size)
             // Use delegate getter for state access
-            Log.d(TAG, "MainScreen: currentIndex = $currentIndexState")
+            Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
         }
