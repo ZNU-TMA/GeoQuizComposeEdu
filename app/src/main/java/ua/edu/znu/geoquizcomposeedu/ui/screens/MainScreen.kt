@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -47,7 +49,9 @@ fun MainScreen(
 
 //    val currentIndexState = remember { mutableStateOf(MainScreenState()) }
     // Kotlin destructuring declaration
-    val (mainScreenState, setMainScreenState) = remember { mutableStateOf(MainScreenState()) }
+//    val (mainScreenState, setMainScreenState) = remember { mutableStateOf(MainScreenState()) }
+    // Kotlin destructuring declaration with property delegate
+    var mainScreenState by remember { mutableStateOf(MainScreenState()) }
 
     Column(
         modifier = Modifier
@@ -79,14 +83,11 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-            // Use destructuring declaration parameter for state access
-            val state = mainScreenState
-            val newState = state.copy(
-                currentIndex = (state.currentIndex + 1) % questionBank.size
+            // Use delegated property for state access
+           mainScreenState = mainScreenState.copy(
+                currentIndex = (mainScreenState.currentIndex + 1) % questionBank.size
             )
-            // Update state via setter from destructuring declaration
-            setMainScreenState(newState)
-            // Use destructuring declaration parameter for state access
+            // Use delegated property for state access
             Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
