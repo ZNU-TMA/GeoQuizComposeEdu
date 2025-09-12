@@ -14,8 +14,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,9 +30,9 @@ private const val TAG = "MainScreen"
 
 /*When state defined by more than one parameter wee need data class.
 * Now we remain the one parameter for simplicity.*/
-data class MainScreenState(
-    val currentIndex: Int = 0
-)
+//data class MainScreenState(
+//    val currentIndex: Int = 0
+//)
 
 @Composable
 fun MainScreen(
@@ -47,11 +47,11 @@ fun MainScreen(
         Question(R.string.question_asia, true)
     )
 
-//    val currentIndexState = remember { mutableStateOf(MainScreenState()) }
-    // Kotlin destructuring declaration
-//    val (mainScreenState, setMainScreenState) = remember { mutableStateOf(MainScreenState()) }
-    // Kotlin destructuring declaration with property delegate
-    var mainScreenState by remember { mutableStateOf(MainScreenState()) }
+    // Save state in the Bundle across configuration changes
+    // - WILL BE CRUSH because of rememberSavable cannot save custom classes by default.
+    // It can save only types that can be put in a Bundle - primitives and String.
+//    var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
+    var currentIndexState by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -61,8 +61,8 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            // Use destructuring declaration parameter for state access
-            text = stringResource(id = questionBank[mainScreenState.currentIndex].textResId),
+            // Use delegate getter for state access
+            text = stringResource(id = questionBank[currentIndexState].textResId),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(innerPadding)
@@ -83,12 +83,10 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-            // Use delegated property for state access
-           mainScreenState = mainScreenState.copy(
-                currentIndex = (mainScreenState.currentIndex + 1) % questionBank.size
-            )
-            // Use delegated property for state access
-            Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
+            // Use delegate getter and setter for state access
+            currentIndexState = (currentIndexState + 1) % questionBank.size
+            // Use delegate getter for state access
+            Log.d(TAG, "MainScreen: currentIndex = $currentIndexState")
         }) {
             Text(stringResource(id = R.string.next_button))
         }
