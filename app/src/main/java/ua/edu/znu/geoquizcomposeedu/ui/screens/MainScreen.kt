@@ -26,13 +26,9 @@ import ua.edu.znu.geoquizcomposeedu.model.Question
 
 private const val TAG = "MainScreen"
 
-/*When state defined bymore than one parameter wee need data class.
+/*When state defined by more than one parameter wee need data class.
 * Now we remain the one parameter for simplicity.*/
 data class MainScreenState(
-    // currentIndex is mutable - Compose does not recompose UI
-    // because of state object was not changed
-//    var currentIndex: Int = 0
-    // now currentIndex is immutable
     val currentIndex: Int = 0
 )
 
@@ -49,7 +45,9 @@ fun MainScreen(
         Question(R.string.question_asia, true)
     )
 
-    val currentIndexState = remember { mutableStateOf(MainScreenState()) }
+//    val currentIndexState = remember { mutableStateOf(MainScreenState()) }
+    // Kotlin destructuring declaration
+    val (mainScreenState, setMainScreenState) = remember { mutableStateOf(MainScreenState()) }
 
     Column(
         modifier = Modifier
@@ -59,7 +57,8 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = questionBank[currentIndexState.value.currentIndex].textResId),
+            // Use destructuring declaration parameter for state access
+            text = stringResource(id = questionBank[mainScreenState.currentIndex].textResId),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(innerPadding)
@@ -80,13 +79,15 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-            // We need to create new state object for Compose to recompose UI
-            val state = currentIndexState.value
+            // Use destructuring declaration parameter for state access
+            val state = mainScreenState
             val newState = state.copy(
                 currentIndex = (state.currentIndex + 1) % questionBank.size
             )
-            currentIndexState.value = newState
-            Log.d(TAG, "MainScreen: currentIndex = ${currentIndexState.value.currentIndex}")
+            // Update state via setter from destructuring declaration
+            setMainScreenState(newState)
+            // Use destructuring declaration parameter for state access
+            Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
         }
