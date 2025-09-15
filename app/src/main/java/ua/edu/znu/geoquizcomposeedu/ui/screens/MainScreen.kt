@@ -1,5 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
+import android.os.Parcelable
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,16 +24,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.parcelize.Parcelize
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.model.Question
-import java.io.Serializable
 
 private const val TAG = "MainScreen"
 
+@Parcelize
 data class MainScreenState(
     val currentIndex: Int = 0
-) : Serializable  // If state content are primitive types or String,
-// you can implement Serializable
+) : Parcelable  // If state content are primitive types or String,
+// you can implement Parcelable instead of Serializable
+// Parcelable is more efficient than Serializable
 // to save and restore state in Bundle
 
 @Composable
