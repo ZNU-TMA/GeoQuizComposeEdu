@@ -3,11 +3,13 @@ package ua.edu.znu.geoquizcomposeedu.ui.screens
 import android.os.Parcelable
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import ua.edu.znu.geoquizcomposeedu.R
+import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.model.Question
 
 private const val TAG = "MainScreen"
@@ -54,6 +57,7 @@ fun MainScreen(
     // Save state in the Bundle across configuration changes
     var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
 
+    logCompositionLifecycle("MainScreen")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,6 +95,16 @@ fun MainScreen(
             Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
+        }
+        Box(
+            modifier = Modifier.height(100.dp)
+        ) {
+            if(mainScreenState.currentIndex == questionBank.size -1) {
+                logCompositionLifecycle("LastQuestionText")
+                Text(
+                    text = "This is the last question"
+                )
+            }
         }
     }
 }
