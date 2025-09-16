@@ -1,7 +1,10 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
+import android.content.Context
 import android.os.Parcelable
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +62,9 @@ fun MainScreen(
     var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
 
     logCompositionLifecycle("MainScreen")
+
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,11 +85,24 @@ fun MainScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = { /*TODO*/ }) {
+            Button(
+                onClick = {
+                    showToast(
+                        context,
+                        checkAnswer(true, questionBank[mainScreenState.currentIndex])
+                    )
+                }
+            ) {
                 Text(stringResource(id = R.string.true_button))
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = { /*TODO*/ }) {
+            Button(
+                onClick = {
+                    showToast(
+                        context,
+                        checkAnswer(false, questionBank[mainScreenState.currentIndex])
+                    )
+                }) {
                 Text(stringResource(id = R.string.false_button))
             }
         }
@@ -99,13 +119,28 @@ fun MainScreen(
         Box(
             modifier = Modifier.height(100.dp)
         ) {
-            if(mainScreenState.currentIndex == questionBank.size -1) {
+            if (mainScreenState.currentIndex == questionBank.size - 1) {
                 logCompositionLifecycle("LastQuestionText")
                 Text(
                     text = "This is the last question"
                 )
             }
         }
+    }
+}
+
+private fun showToast(context: Context, @StringRes resId: Int) {
+    Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
+}
+
+private fun checkAnswer(
+    userAnswer: Boolean,
+    question: Question
+): Int {
+    return if (userAnswer == question.answer) {
+        R.string.correct_toast
+    } else {
+        R.string.incorrect_toast
     }
 }
 
