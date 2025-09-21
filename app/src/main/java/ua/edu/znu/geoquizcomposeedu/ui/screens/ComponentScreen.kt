@@ -2,12 +2,9 @@ package ua.edu.znu.geoquizcomposeedu.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,8 +17,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ComponentScreen(innerPadding: PaddingValues) {
-    var textValue: String by remember {
-        mutableStateOf("")
+    var state: Boolean by remember {
+        mutableStateOf(false)
     }
     Box(
         modifier = Modifier
@@ -29,13 +26,12 @@ fun ComponentScreen(innerPadding: PaddingValues) {
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-//        TextField(
-        OutlinedTextField(
-//            value = "qwerty",
-            value = textValue,
-            onValueChange = { newTextValue ->
-                /* Handle text change */
-                textValue = newTextValue
+        Checkbox(
+//            checked = true,
+            checked = state,
+            onCheckedChange = { newCheckedState ->
+                /* Handle checkbox state change */
+                state = newCheckedState
             }
         )
     }
