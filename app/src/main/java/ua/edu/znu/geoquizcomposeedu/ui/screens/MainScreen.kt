@@ -1,10 +1,7 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
-import android.content.Context
 import android.os.Parcelable
 import android.util.Log
-import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,9 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,10 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.parcelize.Parcelize
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
-import ua.edu.znu.geoquizcomposeedu.model.Question
+import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 
 private const val TAG = "MainScreen"
 
@@ -49,21 +45,27 @@ data class MainScreenState(
 fun MainScreen(
     innerPadding: PaddingValues,
 ) {
-    val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true)
-    )
+    val mainViewModel: MainViewModel = viewModel()
+
+//    val questionBank = listOf(
+//        Question(R.string.question_australia, true),
+//        Question(R.string.question_oceans, true),
+//        Question(R.string.question_mideast, false),
+//        Question(R.string.question_africa, false),
+//        Question(R.string.question_americas, true),
+//        Question(R.string.question_asia, true)
+//    )
 
     // Save state in the Bundle across configuration changes
-    var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
+//    var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
 
-    logCompositionLifecycle("MainScreen")
+    // Use StateFlow in ViewModel to hold screen state
+    // and collect it as State in Composable
+    val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+
+    logCompositionLifecycle("MainScreen")
 
     Column(
         modifier = Modifier
@@ -73,8 +75,7 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            // Use delegate getter for state access
-            text = stringResource(id = questionBank[mainScreenState.currentIndex].textResId),
+            text = stringResource(id = mainViewModel.getCurrentQuestionId()),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(innerPadding)
@@ -87,10 +88,7 @@ fun MainScreen(
         ) {
             Button(
                 onClick = {
-                    showToast(
-                        context,
-                        checkAnswer(true, questionBank[mainScreenState.currentIndex])
-                    )
+                    mainViewModel.onAnswerButtonClick(context, true)
                 }
             ) {
                 Text(stringResource(id = R.string.true_button))
@@ -98,20 +96,17 @@ fun MainScreen(
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
-                    showToast(
-                        context,
-                        checkAnswer(false, questionBank[mainScreenState.currentIndex])
-                    )
+                    mainViewModel.onAnswerButtonClick(context, false)
                 }) {
                 Text(stringResource(id = R.string.false_button))
             }
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-            // Use delegate getter and setter for state access
-            mainScreenState =
-                mainScreenState.copy((mainScreenState.currentIndex + 1) % questionBank.size)
-            // Use delegate getter for state access
+//            // Use delegate getter and setter for state access
+//            mainScreenState =
+//                mainScreenState.copy((mainScreenState.currentIndex + 1) % questionBank.size)
+            mainViewModel.onNextQuestionButtonClick()
             Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
@@ -119,7 +114,7 @@ fun MainScreen(
         Box(
             modifier = Modifier.height(100.dp)
         ) {
-            if (mainScreenState.currentIndex == questionBank.size - 1) {
+            if (mainViewModel.isLastQuestion()) {
                 logCompositionLifecycle("LastQuestionText")
                 Text(
                     text = "This is the last question"
@@ -129,20 +124,20 @@ fun MainScreen(
     }
 }
 
-private fun showToast(context: Context, @StringRes resId: Int) {
-    Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
-}
+//private fun showToast(context: Context, @StringRes resId: Int) {
+//    Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
+//}
 
-private fun checkAnswer(
-    userAnswer: Boolean,
-    question: Question
-): Int {
-    return if (userAnswer == question.answer) {
-        R.string.correct_toast
-    } else {
-        R.string.incorrect_toast
-    }
-}
+//private fun checkAnswer(
+//    userAnswer: Boolean,
+//    question: Question
+//): Int {
+//    return if (userAnswer == question.answer) {
+//        R.string.correct_toast
+//    } else {
+//        R.string.incorrect_toast
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable
