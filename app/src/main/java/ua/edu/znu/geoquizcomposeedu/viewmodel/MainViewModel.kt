@@ -26,7 +26,16 @@ class MainViewModel : ViewModel() {
         Question(textResId = R.string.question_asia, answer = true)
     )
 
-    fun getCurrentQuestionId() = questionBank[_mainScreenState.value.currentIndex].textResId
+    // Does not work, because the ViewModel’s state not updated yet
+    // when the Composable recomposes.
+    // It rely on a value that is not yet updated due to the asynchronous nature
+    // of state updates in Compose.
+//    fun getCurrentQuestionId() = questionBank[_mainScreenState.value.currentIndex].textResId
+
+    // Works, because the updated in Composable index is passed as a parameter
+    fun getQuestionIdByIndex(index: Int): Int {
+        return questionBank[index].textResId
+    }
 
     fun onAnswerButtonClick(context: Context, isTrue: Boolean) {
         val currentQuestion = questionBank[_mainScreenState.value.currentIndex]
@@ -45,6 +54,8 @@ class MainViewModel : ViewModel() {
         Log.d(TAG, "onNextQuestionButtonClick: ${_mainScreenState.value.currentIndex}")
     }
 
+    // Works correctly because it may is a pure function
+    // that always reflects the current state.
     fun isLastQuestion(): Boolean {
         return _mainScreenState.value.currentIndex == questionBank.size - 1
     }

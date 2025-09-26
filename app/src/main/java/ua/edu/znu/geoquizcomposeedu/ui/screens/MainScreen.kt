@@ -1,7 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,33 +30,17 @@ import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 
-private const val TAG = "MainScreen"
-
 @Parcelize
 data class MainScreenState(
     val currentIndex: Int = 0
-) : Parcelable  // If state content are primitive types or String,
-// you can implement Parcelable instead of Serializable
-// Parcelable is more efficient than Serializable
-// to save and restore state in Bundle
+) : Parcelable
 
 @Composable
 fun MainScreen(
     innerPadding: PaddingValues,
 ) {
+    // Creates or retrieves the ViewModel
     val mainViewModel: MainViewModel = viewModel()
-
-//    val questionBank = listOf(
-//        Question(R.string.question_australia, true),
-//        Question(R.string.question_oceans, true),
-//        Question(R.string.question_mideast, false),
-//        Question(R.string.question_africa, false),
-//        Question(R.string.question_americas, true),
-//        Question(R.string.question_asia, true)
-//    )
-
-    // Save state in the Bundle across configuration changes
-//    var mainScreenState by rememberSaveable { mutableStateOf(MainScreenState()) }
 
     // Use StateFlow in ViewModel to hold screen state
     // and collect it as State in Composable
@@ -75,7 +58,14 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = mainViewModel.getCurrentQuestionId()),
+            // Does not work, because he ViewModel’s state not updated yet
+            // when the Composable recomposes.
+//            text = stringResource(id = mainViewModel.getCurrentQuestionId()),
+
+            // For debugging
+//            text = mainScreenState.currentIndex.toString(),
+
+            text = stringResource(id = mainViewModel.getQuestionIdByIndex(mainScreenState.currentIndex)),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(innerPadding)
@@ -103,11 +93,7 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
-//            // Use delegate getter and setter for state access
-//            mainScreenState =
-//                mainScreenState.copy((mainScreenState.currentIndex + 1) % questionBank.size)
             mainViewModel.onNextQuestionButtonClick()
-            Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
         }
@@ -124,26 +110,11 @@ fun MainScreen(
     }
 }
 
-//private fun showToast(context: Context, @StringRes resId: Int) {
-//    Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
-//}
-
-//private fun checkAnswer(
-//    userAnswer: Boolean,
-//    question: Question
-//): Int {
-//    return if (userAnswer == question.answer) {
-//        R.string.correct_toast
-//    } else {
-//        R.string.incorrect_toast
-//    }
-//}
-
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-
     val innerPadding = PaddingValues(16.dp)
-
-    MainScreen(innerPadding)
+    MainScreen(
+        innerPadding = innerPadding
+    )
 }
