@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,10 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.parcelize.Parcelize
 import ua.edu.znu.geoquizcomposeedu.R
+import ua.edu.znu.geoquizcomposeedu.data.QuestionDataSource
+import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 
@@ -39,14 +44,34 @@ data class MainScreenState(
 fun MainScreen(
     innerPadding: PaddingValues,
 ) {
+    // using remember to avoid re-creating the repository on every recomposition
+    val questionRepository = remember { QuestionRepository(QuestionDataSource()) }
+
+    // The default viewModel() only works for ViewModels with no-argument constructors.
+    // Since your MainViewModel requires a repository, we need use
+    // a custom ViewModelProvider.Factory
+    val mainViewModel: MainViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                // invoke warning "Unchecked cast: ViewModel to T"
+//                return MainViewModel(questionRepository) as T
+                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return MainViewModel(questionRepository) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+    )
+
     // Creates or retrieves the ViewModel
-    val mainViewModel: MainViewModel = viewModel()
+//    val mainViewModel: MainViewModel = viewModel()
+
+    val context = LocalContext.current
 
     // Use StateFlow in ViewModel to hold screen state
     // and collect it as State in Composable
     val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
-
-    val context = LocalContext.current
 
     logCompositionLifecycle("MainScreen")
 
