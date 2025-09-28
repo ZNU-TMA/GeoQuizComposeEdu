@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.ui.screens
+package ua.edu.znu.geoquizcomposeedu.educational.multicomponents
 
 import android.os.Parcelable
 import androidx.compose.foundation.clickable

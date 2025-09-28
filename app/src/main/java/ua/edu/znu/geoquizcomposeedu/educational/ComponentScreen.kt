@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.ui.screens
+package ua.edu.znu.geoquizcomposeedu.educational
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

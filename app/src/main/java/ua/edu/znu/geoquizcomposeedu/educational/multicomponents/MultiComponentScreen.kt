@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.ui.screens
+package ua.edu.znu.geoquizcomposeedu.educational.multicomponents
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,7 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ua.edu.znu.geoquizcomposeedu.ui.components.Container
+import ua.edu.znu.geoquizcomposeedu.educational.multicomponents.components.Container
 
 @Composable
 fun MultiComponentScreen(innerPadding: PaddingValues) {

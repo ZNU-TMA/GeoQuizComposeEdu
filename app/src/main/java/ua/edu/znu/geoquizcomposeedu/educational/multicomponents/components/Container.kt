@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.ui.components
+package ua.edu.znu.geoquizcomposeedu.educational.multicomponents.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
