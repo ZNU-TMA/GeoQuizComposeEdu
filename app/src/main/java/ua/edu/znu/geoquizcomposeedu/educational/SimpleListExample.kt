@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,50 +22,46 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun SimpleListExample(innerPadding: PaddingValues) {
 
-    val list: List<String> = remember {
+    val list1: List<String> = remember {
         List(100) { index -> "Item #${index + 1}" }
+    }
+
+    val list2: List<String> = remember {
+        List(50) { index -> "Another Item #${index + 1}" }
     }
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
     ) {
-        stickyHeader {
-            ListHeader("Header 1")
-        }
-
-        items(list) { item ->
-            ListItem(text = item)
-        }
-
-        stickyHeader {
-            ListHeader("Header 2")
-        }
-
-        items(50) { index ->
-            ListItem(text = "Another Item #${index + 1}")
-        }
+        listHeader("Header 1")
+        listItems(list1)
+        listHeader("Header 2")
+        listItems(list2)
     }
 }
 
-@Composable
-fun ListHeader(text: String) {
-    Text(
-        text = text,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .background(Color.LightGray)
-    )
+@OptIn(ExperimentalFoundationApi::class)
+fun LazyListScope.listHeader(text: String) {
+    stickyHeader {
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .background(Color.LightGray)
+        )
+    }
 }
 
-@Composable
-fun ListItem(text: String) {
-    Text(
-        text = text,
-        modifier = Modifier.padding(16.dp)
-    )
+fun LazyListScope.listItems(list: List<String>) {
+    items(list) { item ->
+        Text(
+            text = item,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
 }
 
 @Preview(showBackground = true)
