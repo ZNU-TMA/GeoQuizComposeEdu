@@ -1,5 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.educational
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SimpleListExample(innerPadding: PaddingValues) {
 
@@ -27,7 +29,7 @@ fun SimpleListExample(innerPadding: PaddingValues) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
     ) {
-        item {
+        stickyHeader {
             Text(
                 text = "Header",
                 fontWeight = FontWeight.Bold,
