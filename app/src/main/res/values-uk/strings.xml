@@ -11,4 +11,7 @@
     <string name="question_asia">Озеро Байкал є найстарішим та найглибшим прісноводним озером</string>
     <string name="correct_toast">Правильно!</string>
     <string name="incorrect_toast">Неправильно!</string>
+    <string name="user_clicked">Клік на: %1$s</string>
+    <string name="user_photo">Фото користувача</string>
+    <string name="delete_user">Видалити користувача</string>
 </resources>
