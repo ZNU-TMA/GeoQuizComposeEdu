@@ -1,6 +1,7 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
-import android.os.Parcelable
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,17 +29,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.parcelize.Parcelize
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.QuestionDataSource
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 
-@Parcelize
+private const val TAG = "MainScreen"
+
 data class MainScreenState(
     val currentIndex: Int = 0
-) : Parcelable
+)
 
 @Composable
 fun MainScreen(
@@ -103,7 +104,8 @@ fun MainScreen(
         ) {
             Button(
                 onClick = {
-                    mainViewModel.onAnswerButtonClick(context, true)
+                    val messageId = mainViewModel.onAnswerButtonClick(true)
+                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
                 }
             ) {
                 Text(stringResource(id = R.string.true_button))
@@ -111,7 +113,8 @@ fun MainScreen(
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
-                    mainViewModel.onAnswerButtonClick(context, false)
+                    val messageId = mainViewModel.onAnswerButtonClick(false)
+                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
                 }) {
                 Text(stringResource(id = R.string.false_button))
             }
@@ -119,6 +122,7 @@ fun MainScreen(
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
             mainViewModel.onNextQuestionButtonClick()
+            Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
         }

@@ -1,8 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.viewmodel
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,28 +32,29 @@ class MainViewModel(val questionRepository: QuestionRepository) : ViewModel() {
     // of state updates in Compose.
 //    fun getCurrentQuestionId() = questionBank[_mainScreenState.value.currentIndex].textResId
 
-    val currentIndex = _mainScreenState.value.currentIndex
+    var currentIndex = _mainScreenState.value.currentIndex
 
     // Works, because the updated in Composable index is passed as a parameter
     fun getQuestionIdByIndex(index: Int): Int {
         return questionRepository.getQuestionByIndex(index).textResId
     }
 
-    fun onAnswerButtonClick(context: Context, isTrue: Boolean) {
+    fun onAnswerButtonClick(isTrue: Boolean): Int {
         val currentQuestion = questionRepository.getQuestionByIndex(currentIndex)
-        val message = if (isTrue == currentQuestion.answer) {
+        val messageId = if (isTrue == currentQuestion.answer) {
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
         }
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        return messageId
     }
 
     fun onNextQuestionButtonClick() {
         _mainScreenState.value = _mainScreenState.value.copy(
             currentIndex = (currentIndex + 1) % questionRepository.getQuestionBankSize()
         )
-        Log.d(TAG, "onNextQuestionButtonClick: $currentIndex")
+        currentIndex = _mainScreenState.value.currentIndex
+        Log.d(TAG, "MainViewModel.onNextQuestionButtonClick currentIndex: $currentIndex")
     }
 
     // Works correctly because it may is a pure function
