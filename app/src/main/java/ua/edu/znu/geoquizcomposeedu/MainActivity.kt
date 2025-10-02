@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import ua.edu.znu.geoquizcomposeedu.educational.UserListExample
+import ua.edu.znu.geoquizcomposeedu.ui.screens.MainScreen
 import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionListScreen
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 
