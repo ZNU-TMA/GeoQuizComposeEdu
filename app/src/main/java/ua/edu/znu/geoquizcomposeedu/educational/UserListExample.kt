@@ -105,7 +105,7 @@ fun UserListExample(
                         Toast.LENGTH_SHORT
                     ).show()
                 },
-                onUserDeletedL = {
+                onUserDeleted = {
                     userlist -= user
                 },
                 modifier = Modifier
@@ -120,7 +120,7 @@ fun UserCard(
     user: User,
     modifier: Modifier = Modifier,
     onUserClicked: () -> Unit = {},
-    onUserDeletedL: () -> Unit = {},
+    onUserDeleted: () -> Unit = {},
 ) {
     Card(
         shape = RoundedCornerShape(6.dp),
@@ -137,7 +137,7 @@ fun UserCard(
             UserImage(user.photoUrl)
             Spacer(Modifier.width(16.dp))
             UserInfo(user)
-            DeletedUserButton(onUserDeleted = onUserDeletedL)
+            DeletedUserButton(onUserDeleted = onUserDeleted)
         }
     }
 }
