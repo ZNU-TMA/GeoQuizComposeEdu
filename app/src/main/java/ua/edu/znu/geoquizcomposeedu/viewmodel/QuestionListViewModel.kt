@@ -1,18 +1,17 @@
 package ua.edu.znu.geoquizcomposeedu.viewmodel
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
-import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionListScreenState
 
-class QuestionListViewModel(val questionRepository: QuestionRepository) : ViewModel() {
-    private val _questionListScreenState = MutableStateFlow(QuestionListScreenState())
-    val questionListScreenState: StateFlow<QuestionListScreenState> =
-        _questionListScreenState.asStateFlow()
+class QuestionListViewModel(
+    private val questionRepository: QuestionRepository) : ViewModel() {
 
-    fun getQuestionBankSize() = questionRepository.getQuestionBankSize()
+    val questionFlow = questionRepository.getAllQuestions()
 
-    fun getQuestionByIndex(index: Int) = questionRepository.getQuestionByIndex(index)
+    fun onRemoveQuestionClick(question: Question) = questionRepository.removeQuestion(question)
+
+//    fun onAddQuestionClick(question: Question) = questionRepository.addQuestion(question)
+//
+//    fun onUpdateQuestionClick(updatedQuestion: Question) = questionRepository.updateQuestion(updatedQuestion)
 }
