@@ -5,6 +5,7 @@ import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 
 class QuestionListViewModel(
+
     private val questionRepository: QuestionRepository) : ViewModel() {
 
     val questionFlow = questionRepository.getAllQuestions()

@@ -61,10 +61,11 @@ fun QuestionListScreen(
             }
         }
     )
+    // Collect the question list state from the ViewModel and return the question list
+    // because of delegate using by.
+    val questionList:List<Question> by questionListViewModel.questionFlow.collectAsStateWithLifecycle()
 
-    val questionListScreenState by questionListViewModel.questionFlow.collectAsStateWithLifecycle()
-
-    Log.d(TAG, "QuestionListScreen: questionList.size = ${questionListScreenState.size}")
+    Log.d(TAG, "QuestionListScreen: questionList.size = ${questionList.size}")
 
     LazyColumn(
         contentPadding = innerPadding,
@@ -91,7 +92,7 @@ fun QuestionListScreen(
             }
         }
         items(
-            items = questionListScreenState,
+            items = questionList,
             key = { question -> question.id }
         ) { question ->
             QuestionCard(
@@ -130,7 +131,7 @@ fun QuestionCard(
             Checkbox(
                 checked = question.answer,
                 enabled = false,
-                onCheckedChange = { /*TODO*/ },
+                onCheckedChange = {},
             )
             Spacer(modifier = Modifier.width(8.dp))
             IconButton(onClick = onEditQuestionClick) {
