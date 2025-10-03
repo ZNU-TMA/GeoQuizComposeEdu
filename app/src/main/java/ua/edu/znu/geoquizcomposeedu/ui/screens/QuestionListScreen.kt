@@ -25,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +38,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
-import ua.edu.znu.geoquizcomposeedu.data.QuestionDataSource
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionListViewModel
 
@@ -50,7 +48,7 @@ private const val TAG = "QuestionListScreen"
 fun QuestionListScreen(
     innerPadding: PaddingValues,
 ) {
-    val questionRepository = remember { QuestionRepository(QuestionDataSource()) }
+    val questionRepository = QuestionRepository.getInstance()
 
     val questionListViewModel: QuestionListViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {

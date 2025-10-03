@@ -4,7 +4,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class QuestionRepository(val questionDataSource: QuestionDataSource){
+class QuestionRepository private constructor (private val questionDataSource: QuestionDataSource){
+
+    companion object {
+        @Volatile
+        private var INSTANCE: QuestionRepository? = null
+
+        fun getInstance(): QuestionRepository {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: QuestionRepository(QuestionDataSource()).also { INSTANCE = it }
+            }
+        }
+    }
 
     fun getQuestionByIndex(index: Int): Question {
         return questionDataSource.getQuestionBank()[index]
@@ -12,6 +23,8 @@ class QuestionRepository(val questionDataSource: QuestionDataSource){
 
     fun getQuestionBankSize() = questionDataSource.getQuestionBank().size
 
+    // Using MutableStateFlow for observable question list
+    // so that any changes to the list will be emitted to collectors
     private val questionsMutableStateFlow: MutableStateFlow<List<Question>> =
         MutableStateFlow(questionDataSource.getQuestionBank())
 

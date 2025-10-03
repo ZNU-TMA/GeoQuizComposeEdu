@@ -17,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,7 +29,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.edu.znu.geoquizcomposeedu.R
-import ua.edu.znu.geoquizcomposeedu.data.QuestionDataSource
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
@@ -46,7 +44,8 @@ fun MainScreen(
     innerPadding: PaddingValues,
 ) {
     // using remember to avoid re-creating the repository on every recomposition
-    val questionRepository = remember { QuestionRepository(QuestionDataSource()) }
+//    val questionRepository = remember { QuestionRepository(QuestionDataSource()) }
+    val questionRepository = QuestionRepository.getInstance()
 
     // The default viewModel() only works for ViewModels with no-argument constructors.
     // Since your MainViewModel requires a repository, we need use
