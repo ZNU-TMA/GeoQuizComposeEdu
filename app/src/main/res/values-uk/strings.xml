@@ -14,4 +14,10 @@
     <string name="user_clicked">Клік на: %1$s</string>
     <string name="user_photo">Фото користувача</string>
     <string name="delete_user">Видалити користувача</string>
+    <string name="questions">Питання</string>
+    <string name="settings">Налаштування</string>
+    <string name="profile">Профіль</string>
+    <string name="main_menu">Головне меню</string>
+    <string name="more_actions">Додаткові дії</string>
+    <string name="add_question">Додати питання</string>
 </resources>
