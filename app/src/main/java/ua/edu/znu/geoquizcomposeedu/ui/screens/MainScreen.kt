@@ -1,7 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,8 +32,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
+import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 
@@ -42,6 +48,7 @@ data class MainScreenState(
 @Composable
 fun MainScreen(
     innerPadding: PaddingValues,
+    snackbarHostState: SnackbarHostState,
 ) {
     // using remember to avoid re-creating the repository on every recomposition
 //    val questionRepository = remember { QuestionRepository(QuestionDataSource()) }
@@ -74,38 +81,39 @@ fun MainScreen(
     val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
 
     logCompositionLifecycle("MainScreen")
+    // For scrolling in the horizontal layout
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
+            .padding(innerPadding)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            // Does not work, because he ViewModel’s state not updated yet
-            // when the Composable recomposes.
-//            text = stringResource(id = mainViewModel.getCurrentQuestionId()),
-
-            // For debugging
-//            text = mainScreenState.currentIndex.toString(),
-
             text = stringResource(id = mainViewModel.getQuestionIdByIndex(mainScreenState.currentIndex)),
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(innerPadding)
                 .padding(16.dp)
         )
         Row(
-            modifier = Modifier.size(height = 90.dp, width = 200.dp),
+            modifier = Modifier.size(height = 80.dp, width = 200.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val scope = rememberCoroutineScope()
             Button(
                 onClick = {
                     val messageId = mainViewModel.onAnswerButtonClick(true)
-                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
-                }
+//                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(messageId)
+                        )
+                    }
+                },
             ) {
                 Text(stringResource(id = R.string.true_button))
             }
@@ -113,12 +121,18 @@ fun MainScreen(
             Button(
                 onClick = {
                     val messageId = mainViewModel.onAnswerButtonClick(false)
-                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
-                }) {
+//                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(messageId),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                },
+            ) {
                 Text(stringResource(id = R.string.false_button))
             }
         }
-        Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = {
             mainViewModel.onNextQuestionButtonClick()
             Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
@@ -126,7 +140,7 @@ fun MainScreen(
             Text(stringResource(id = R.string.next_button))
         }
         Box(
-            modifier = Modifier.height(100.dp)
+            modifier = Modifier.height(80.dp)
         ) {
             if (mainViewModel.isLastQuestion()) {
                 logCompositionLifecycle("LastQuestionText")
@@ -138,11 +152,16 @@ fun MainScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
-    val innerPadding = PaddingValues(16.dp)
-    MainScreen(
-        innerPadding = innerPadding
-    )
+    GeoQuizComposeEduTheme(darkTheme = true) {
+        // Provide empty padding for preview
+        val innerPadding = PaddingValues(16.dp)
+        val snackbarHostState = SnackbarHostState()
+        MainScreen(
+            innerPadding = innerPadding,
+            snackbarHostState = snackbarHostState
+        )
+    }
 }
