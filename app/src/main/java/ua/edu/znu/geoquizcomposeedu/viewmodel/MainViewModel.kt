@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ua.edu.znu.geoquizcomposeedu.R
+import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.ui.screens.MainScreenState
 
@@ -35,8 +36,8 @@ class MainViewModel(val questionRepository: QuestionRepository) : ViewModel() {
     var currentIndex = _mainScreenState.value.currentIndex
 
     // Works, because the updated in Composable index is passed as a parameter
-    fun getQuestionIdByIndex(index: Int): Int {
-        return questionRepository.getQuestionByIndex(index).textResId
+    fun getQuestionByIndex(index: Int): Question {
+        return questionRepository.getQuestionByIndex(index)
     }
 
     fun onAnswerButtonClick(isTrue: Boolean): Int {

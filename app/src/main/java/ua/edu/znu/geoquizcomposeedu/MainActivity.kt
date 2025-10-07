@@ -34,7 +34,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.ui.screens.MainScreen
+import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionListScreen
+import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionScreen
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 
 class MainActivity : ComponentActivity() {
@@ -138,7 +141,9 @@ class MainActivity : ComponentActivity() {
                                     text = data.visuals.message,
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp)
                                 )
                             }
                         }
@@ -154,6 +159,12 @@ class MainActivity : ComponentActivity() {
 //                    SimpleListExample(innerPadding)
 //                    UserListExample(innerPadding)
 //                    QuestionListScreen(innerPadding)
+//                    val sampleQuestion = Question(
+//                        id = 1,
+//                        questionText = stringResource(R.string.question_australia),
+//                        answer = true
+//                    )
+//                    QuestionScreen(innerPadding, sampleQuestion)
                 }
             }
         }

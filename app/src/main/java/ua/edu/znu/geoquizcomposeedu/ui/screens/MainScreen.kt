@@ -93,7 +93,7 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = mainViewModel.getQuestionIdByIndex(mainScreenState.currentIndex)),
+            text = mainViewModel.getQuestionByIndex(mainScreenState.currentIndex).questionText,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(16.dp)

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +36,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionListViewModel
@@ -46,6 +45,8 @@ private const val TAG = "QuestionListScreen"
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuestionListScreen(
+//    questionListViewModel: QuestionListViewModel,
+//    onQuestionSelected: (Question) -> Unit = {},
     innerPadding: PaddingValues,
 ) {
     val questionRepository = QuestionRepository.getInstance()
@@ -63,7 +64,7 @@ fun QuestionListScreen(
     )
     // Collect the question list state from the ViewModel and return the question list
     // because of delegate using by.
-    val questionList:List<Question> by questionListViewModel.questionFlow.collectAsStateWithLifecycle()
+    val questionList:List<Question> by questionListViewModel.questionListFlow.collectAsStateWithLifecycle()
 
     Log.d(TAG, "QuestionListScreen: questionList.size = ${questionList.size}")
 
@@ -125,7 +126,7 @@ fun QuestionCard(
                 .padding(8.dp)
         ) {
             Text(
-                text = stringResource(id = question.textResId),
+                text = question.questionText,
                 modifier = Modifier.fillMaxWidth(0.65f)
             )
             Checkbox(
@@ -157,8 +158,8 @@ fun QuestionCard(
 fun QuestionCardPreview() {
     QuestionCard(
         question = Question(
-            id = R.string.question_asia,
-            textResId = R.string.question_asia,
+            id = 1,
+            questionText = "Канберра - це столиця Австралії",
             answer = true
         )
     )
