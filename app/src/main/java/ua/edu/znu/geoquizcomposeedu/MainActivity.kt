@@ -150,15 +150,15 @@ class MainActivity : ComponentActivity() {
                     },
                 ) { innerPadding ->
                     // main content
-                    MainScreen(
-                        innerPadding = innerPadding,
-                        snackbarHostState = snackbarHostState
-                    )
+//                    MainScreen(
+//                        innerPadding = innerPadding,
+//                        snackbarHostState = snackbarHostState
+//                    )
 //                    ComponentScreen(innerPadding)
 //                    MultiComponentScreen(innerPadding)
 //                    SimpleListExample(innerPadding)
 //                    UserListExample(innerPadding)
-//                    QuestionListScreen(innerPadding)
+                    QuestionListScreen(innerPadding)
 //                    val sampleQuestion = Question(
 //                        id = 1,
 //                        questionText = stringResource(R.string.question_australia),
