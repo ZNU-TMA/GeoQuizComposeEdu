@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,58 +25,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
-import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
-import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionListViewModel
+import ua.edu.znu.geoquizcomposeedu.data.QuestionRepositoryImpl
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionViewModel
+import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
 
 private const val TAG = "QuestionScreen"
 
 @Composable
 fun QuestionScreen(
     innerPadding: PaddingValues,
-    question: Question,
-//    questionListViewModel: QuestionListViewModel,
-//    onBack: () -> Unit
+    initialQuestion: Question? = null,
+    onSubmit: (Question) -> Unit,
+    buttonTextRes: Int
 ) {
+    val questionRepository = QuestionRepositoryImpl.getInstance()
+
     val questionViewModel: QuestionViewModel = viewModel(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(QuestionViewModel::class.java)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return QuestionViewModel(question) as T
-                }
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
+        factory = ViewModelFactory(QuestionViewModel::class.java) {
+//            QuestionViewModel(questionRepository, initialQuestion)
+            QuestionViewModel(questionRepository)
         }
     )
-    // Collect the question state from the ViewModel and return the question
-    // because of delegate using by.
-    val currentQuestion by questionViewModel.questionFlow.collectAsStateWithLifecycle()
 
-//    var textValue: String by remember { mutableStateOf("") }
-//    var state: Boolean by remember { mutableStateOf(false) }
+    /* We don't need to observe and react to changes in the question data
+       from QuestionViewModel, so collecting the flow is unnecessary
+       and we relying only on initialQuestion. */
+//    val questionState = questionViewModel.questionFlow.collectAsStateWithLifecycle()
+
+    var textValue by rememberSaveable { mutableStateOf(initialQuestion?.questionText ?: "") }
+    var state by rememberSaveable { mutableStateOf(initialQuestion?.answer ?: false) }
 
     val localFocusManager = LocalFocusManager.current
-
-//    var textValue by rememberSaveable { mutableStateOf(question.questionText) }
-//    var state by rememberSaveable { mutableStateOf(question.answer) }
-
-    var textValue by remember { mutableStateOf(currentQuestion.questionText) }
-    var state by remember { mutableStateOf(currentQuestion.answer) }
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(innerPadding)
+            // To hide virtual keyboard when tapping outside TextField
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     localFocusManager.clearFocus()
@@ -90,14 +81,6 @@ fun QuestionScreen(
                 textValue = updatedText
             },
             label = { Text(text = stringResource(R.string.questions)) },
-//            value = currentQuestion.questionText,
-//            label = { Text(text = stringResource(R.string.questions)) },
-//            onValueChange = { updatedText ->
-//                questionViewModel.onUpdateQuestionClick(
-//                    currentQuestion.copy(questionText = updatedText)
-//                )
-//            },
-//        singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(6.dp))
@@ -106,75 +89,75 @@ fun QuestionScreen(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Is answer True?")
+            Text(text = stringResource(R.string.is_answer_true))
             Spacer(modifier = Modifier.padding(8.dp))
             Checkbox(
                 checked = state,
                 onCheckedChange = { isChecked ->
                     state = isChecked
                 },
-//                checked = question.answer,
-//                onCheckedChange = { isChecked ->
-//                    questionViewModel.onUpdateQuestionClick(
-//                        question.copy(answer = isChecked)
-//                    )
-//                },
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-//        Button(
-//            onClick = {
-//                val newQuestion = Question(
-//                    id = currentQuestion.id,
-//                    questionText = textValue,
-//                    answer = state
-//                )
-//                questionViewModel.onAddQuestionClick(newQuestion)
-//                Log.d(
-//                    TAG,
-//                    "Question bank size: ${QuestionRepository.getInstance().getQuestionBankSize()}"
-//                )
-//            },
-//        ) {
-//            Text(text = stringResource(R.string.add_question))
-//        }
         Button(onClick = {
-            questionViewModel.onUpdateQuestionClick(
-                question.copy(
-                    questionText = textValue,
-                    answer = state
-                )
+            val question = initialQuestion?.copy(
+                questionText = textValue,
+                answer = state
+            ) ?: Question(
+                questionText = textValue,
+                answer = state
             )
+            if (initialQuestion == null) {
+                questionViewModel.onAddQuestionClick(question)
+            } else {
+                // TODO: check if question was changed
+                questionViewModel.onUpdateQuestionClick(question)
+            }
             Log.d(
                 TAG,
-                "Question bank size: ${QuestionRepository.getInstance().getQuestionByIndex(0)}"
+                "Question bank: ${questionRepository.getQuestionListState().value}"
             )
-//            onBack()
+            onSubmit(question)
         }) {
-            Text("Update")
+            Text(stringResource(buttonTextRes))
         }
-//        Spacer(modifier = Modifier.height(8.dp))
-//        Button(onClick = {
-//            questionViewModel.onRemoveQuestionClick(question)
-//            Log.d(
-//                TAG,
-//                "Question bank size: ${QuestionRepository.getInstance().getQuestionBankSize()}"
-//            )
-////            onBack()
-//        }) {
-//            Text("Remove")
-//        }
     }
 }
 
+@Composable
+fun UpdateQuestionScreen(
+    innerPadding: PaddingValues,
+    question: Question,
+    onBack: () -> Unit = {}
+) {
+    QuestionScreen(
+        innerPadding = innerPadding,
+        initialQuestion = question,
+        onSubmit = { onBack() },
+        buttonTextRes = R.string.update_question
+    )
+}
 
-//@Preview(showSystemUi = true)
-//@Composable
-//fun QuestionScreenPreview() {
-//    val innerPadding = PaddingValues(16.dp)
-//    val sampleQuestion = Question(
-//        questionText = stringResource(R.string.question_australia),
-//        answer = true
-//    )
-//    QuestionScreen(innerPadding, sampleQuestion)
-//}
+@Composable
+fun AddQuestionScreen(
+    innerPadding: PaddingValues,
+    onBack: () -> Unit = {}
+) {
+    QuestionScreen(
+        innerPadding = innerPadding,
+        initialQuestion = null,
+        onSubmit = { onBack() },
+        buttonTextRes = R.string.add_question
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun QuestionScreenPreview() {
+    val innerPadding = PaddingValues(16.dp)
+    val sampleQuestion = Question(
+        questionText = stringResource(R.string.question_australia),
+        answer = true
+    )
+    UpdateQuestionScreen(innerPadding, sampleQuestion)
+}

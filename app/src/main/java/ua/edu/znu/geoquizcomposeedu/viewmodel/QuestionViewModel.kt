@@ -1,25 +1,18 @@
 package ua.edu.znu.geoquizcomposeedu.viewmodel
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
-import ua.edu.znu.geoquizcomposeedu.data.QuestionRepositoryImpl
-//TODO Should QuestionViewModel also take QuestionRepository as a parameter?
-class QuestionViewModel(question: Question) : ViewModel() {
 
-    var questionFlow: MutableStateFlow<Question> =
-        MutableStateFlow(question)
 
-    private val questionRepository: QuestionRepository = QuestionRepositoryImpl.getInstance()
+class QuestionViewModel(private val questionRepository: QuestionRepository) :
+    ViewModel() {
+    /* We don't need to observe and react to changes in the question data
+       from QuestionViewModel, so collecting the flow is unnecessary
+       and we relying only on initialQuestion. */
+//    val questionFlow = questionRepository.getQuestionState(question)
 
     fun onAddQuestionClick(question: Question) = questionRepository.addQuestion(question)
 
-    fun onUpdateQuestionClick(updatedQuestion: Question) =
-        questionRepository.updateQuestion(updatedQuestion)
-
-//    fun onUpdateQuestionClick(updatedQuestion: Question) {
-//        questionRepository.updateQuestion(question)
-//        questionFlow.value = updatedQuestion
-//    }
+    fun onUpdateQuestionClick(question: Question) = questionRepository.updateQuestion(question)
 }
