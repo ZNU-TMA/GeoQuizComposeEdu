@@ -42,7 +42,9 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
 //    }
 
     override fun addQuestion(question: Question) {
-        questionsMutableStateFlow.update { oldQuestions -> oldQuestions + question }
+        questionsMutableStateFlow.update { oldQuestions ->
+            if (oldQuestions.contains(question)) oldQuestions else oldQuestions + question
+        }
     }
 
     override fun updateQuestion(updatedQuestion: Question) {
