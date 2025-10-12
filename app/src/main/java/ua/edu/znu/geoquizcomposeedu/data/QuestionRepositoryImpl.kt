@@ -1,11 +1,8 @@
 package ua.edu.znu.geoquizcomposeedu.data
 
-import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-
-private const val TAG = "QuestionRepository"
 
 class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDataSource):QuestionRepository {
     // Singleton pattern provides a single instance of the repository with application
@@ -39,6 +36,11 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
         return questionsMutableStateFlow
     }
 
+//    override fun getQuestionState(question: Question): StateFlow<Question> {
+//        val questionStateFlow = MutableStateFlow(question)
+//        return questionStateFlow
+//    }
+
     override fun addQuestion(question: Question) {
         questionsMutableStateFlow.update { oldQuestions -> oldQuestions + question }
     }
@@ -49,7 +51,7 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
                 if (it.id == updatedQuestion.id) updatedQuestion else it
             }
         }
-        Log.d(TAG, "questionsMutableStateFlow: ${questionsMutableStateFlow.value}")
+//        Log.d(TAG, "questionsMutableStateFlow: ${questionsMutableStateFlow.value}")
     }
 
     override fun removeQuestion(question: Question) {

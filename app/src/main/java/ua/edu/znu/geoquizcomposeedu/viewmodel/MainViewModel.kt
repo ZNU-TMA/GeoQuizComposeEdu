@@ -12,7 +12,9 @@ import ua.edu.znu.geoquizcomposeedu.ui.screens.MainScreenState
 
 private const val TAG = "MainViewModel"
 
-class MainViewModel(val questionRepository: QuestionRepository) : ViewModel() {
+// Pass QuestionRepository as a constructor parameter to MainViewModel
+// and assign it to a property.
+class MainViewModel(private val questionRepository: QuestionRepository) : ViewModel() {
     private val _mainScreenState = MutableStateFlow(MainScreenState())
     val mainScreenState: StateFlow<MainScreenState> = _mainScreenState.asStateFlow()
 
