@@ -39,8 +39,8 @@ private const val TAG = "QuestionScreen"
 @Composable
 fun QuestionScreen(
     innerPadding: PaddingValues,
-    initialQuestion: Question? = null,
-    onSubmit: (Question) -> Unit,
+    initialQuestion: Question?,
+//    onSubmit: (Question) -> Unit,
     buttonTextRes: Int
 ) {
     val questionRepository = QuestionRepositoryImpl.getInstance()
@@ -107,17 +107,16 @@ fun QuestionScreen(
                 questionText = textValue,
                 answer = state
             )
-            if (initialQuestion == null) {
-                questionViewModel.onAddQuestionClick(question)
-            } else {
-                // TODO: check if question was changed
+            if (initialQuestion != null) {
                 questionViewModel.onUpdateQuestionClick(question)
+            } else {
+                questionViewModel.onAddQuestionClick(question)
             }
             Log.d(
                 TAG,
                 "Question bank: ${questionRepository.getQuestionListState().value}"
             )
-            onSubmit(question)
+//            onSubmit(question)
         }) {
             Text(stringResource(buttonTextRes))
         }
@@ -128,12 +127,12 @@ fun QuestionScreen(
 fun UpdateQuestionScreen(
     innerPadding: PaddingValues,
     question: Question,
-    onBack: () -> Unit = {}
+//    onBack: () -> Unit = {}
 ) {
     QuestionScreen(
         innerPadding = innerPadding,
         initialQuestion = question,
-        onSubmit = { onBack() },
+//        onSubmit = { onBack() },
         buttonTextRes = R.string.update_question
     )
 }
@@ -141,12 +140,12 @@ fun UpdateQuestionScreen(
 @Composable
 fun AddQuestionScreen(
     innerPadding: PaddingValues,
-    onBack: () -> Unit = {}
+//    onBack: () -> Unit = {}
 ) {
     QuestionScreen(
         innerPadding = innerPadding,
         initialQuestion = null,
-        onSubmit = { onBack() },
+//        onSubmit = { onBack() },
         buttonTextRes = R.string.add_question
     )
 }
@@ -155,9 +154,6 @@ fun AddQuestionScreen(
 @Composable
 fun QuestionScreenPreview() {
     val innerPadding = PaddingValues(16.dp)
-    val sampleQuestion = Question(
-        questionText = stringResource(R.string.question_australia),
-        answer = true
-    )
+    val sampleQuestion = QuestionRepositoryImpl.getInstance().getQuestionByIndex(0)
     UpdateQuestionScreen(innerPadding, sampleQuestion)
 }
