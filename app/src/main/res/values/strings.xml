@@ -22,4 +22,5 @@
     <string name="add_question">Add</string>
     <string name="is_answer_true">Is answer True?</string>
     <string name="update_question">Update</string>
+    <string name="home">Quiz</string>
 </resources>
