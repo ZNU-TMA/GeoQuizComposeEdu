@@ -4,14 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
-import ua.edu.znu.geoquizcomposeedu.educational.navigation.NavAppSimple
-import ua.edu.znu.geoquizcomposeedu.ui.components.AppSnackbar
-import ua.edu.znu.geoquizcomposeedu.ui.components.BottomAppBar
-import ua.edu.znu.geoquizcomposeedu.ui.components.GeoQuizTopAppBar
+import ua.edu.znu.geoquizcomposeedu.educational.navigation.NavAppPassPrimitive
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 
 class MainActivity : ComponentActivity() {
@@ -56,7 +50,7 @@ class MainActivity : ComponentActivity() {
 //                    UpdateQuestionScreen(innerPadding, sampleQuestion)
 //                    val sampleQuestion = Question(questionText = "", answer = false)
 //                    AddQuestionScreen(innerPadding)
-                    NavAppSimple(innerPadding)
+                    NavAppPassPrimitive(innerPadding)
                     /* For Scaffold innerPadding study */
 //                    Text(
 //                        text = "Hello, World!",

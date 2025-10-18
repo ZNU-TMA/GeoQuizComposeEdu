@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SecondScreen(
+    // custom primitive is passed as a parameter from FirstScreen
+    customPrimitive: String,
     onNavigateBack: () -> Unit
 ) {
     Column(
@@ -22,7 +24,8 @@ fun SecondScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text("Second Screen")
+        // custom primitive is displayed on the screen
+        Text("Second Screen - $customPrimitive")
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onNavigateBack) {
             Text("Go back")
@@ -33,5 +36,5 @@ fun SecondScreen(
 @Preview
 @Composable
 fun SecondScreenPreview() {
-    SecondScreen(onNavigateBack = {})
+    SecondScreen(customPrimitive = "Custom primitive", onNavigateBack = {})
 }

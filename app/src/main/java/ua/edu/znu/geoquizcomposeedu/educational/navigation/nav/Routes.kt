@@ -4,9 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Routes {
+    // pure data object without any primitive
     @Serializable
-    object FirstScreen
+    // Extending Routes provides polymorphism for navigation routes,
+    // eg. Routes.FirstScreen and Routes.SecondScreen can be treated uniformly.
+    data object FirstScreen : Routes()
 
+    // data class - because it has a custom primitive to pass between screens
     @Serializable
-    object SecondScreen
+    data class SecondScreen(val customPrimitive: String) : Routes()
 }
