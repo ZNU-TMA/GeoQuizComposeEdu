@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Scaffold
-import ua.edu.znu.geoquizcomposeedu.educational.navigation.NavAppPassPrimitive
+import ua.edu.znu.geoquizcomposeedu.educational.navigation.NavAppPassCustomType
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 //                    UpdateQuestionScreen(innerPadding, sampleQuestion)
 //                    val sampleQuestion = Question(questionText = "", answer = false)
 //                    AddQuestionScreen(innerPadding)
-                    NavAppPassPrimitive(innerPadding)
+                    NavAppPassCustomType(innerPadding)
                     /* For Scaffold innerPadding study */
 //                    Text(
 //                        text = "Hello, World!",

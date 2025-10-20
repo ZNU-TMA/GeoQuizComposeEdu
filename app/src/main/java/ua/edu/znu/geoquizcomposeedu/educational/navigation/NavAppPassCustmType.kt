@@ -1,6 +1,5 @@
 package ua.edu.znu.geoquizcomposeedu.educational.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -9,12 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import ua.edu.znu.geoquizcomposeedu.educational.navigation.data.Subject
 import ua.edu.znu.geoquizcomposeedu.educational.navigation.nav.Routes
+import ua.edu.znu.geoquizcomposeedu.educational.navigation.nav.SubjectNavType
 import ua.edu.znu.geoquizcomposeedu.educational.navigation.ui.screens.FirstScreen
 import ua.edu.znu.geoquizcomposeedu.educational.navigation.ui.screens.SecondScreen
+import kotlin.reflect.typeOf
 
 @Composable
-fun NavAppPassPrimitive(innerPadding: PaddingValues) {
+fun NavAppPassCustomType(innerPadding: PaddingValues) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -23,26 +25,29 @@ fun NavAppPassPrimitive(innerPadding: PaddingValues) {
     ) {
         composable<Routes.FirstScreen> {
             FirstScreen(
-                onNavigateForward = {
+                onListItemClick = {
                     /* Navigate to second screen with primitive parameter pass
                        and add the second screen to NavController stack */
-                        customPrimitive ->
-                    navController.navigate(Routes.SecondScreen(customPrimitive))
+                        subject ->
+                    navController.navigate(Routes.SecondScreen(subject))
                 }
             )
         }
 
-        composable<Routes.SecondScreen> { backStackEntry ->
+        composable<Routes.SecondScreen>(
+            /*Custom type map for the custom type*/
+            typeMap = mapOf(
+                typeOf<Subject>() to SubjectNavType.subjectType,
+            )
+        ) { backStackEntry ->
             // unpacking the back stack entry - current navigation destination
             // to obtain the route
             val route = backStackEntry.toRoute<Routes.SecondScreen>()
-            /*Extract passed data value from the route*/
-            Log.d("SecondScreen", route.customPrimitive)
             SecondScreen(
                 //passing the custom primitive value to the screen
-                customPrimitive = route.customPrimitive,
+                subject = route.subject,
                 onNavigateBack = {
-                    navController.navigate(Routes.FirstScreen)
+                    navController.popBackStack()
                 }
             )
         }

@@ -1,6 +1,7 @@
 package ua.edu.znu.geoquizcomposeedu.educational.navigation.nav
 
 import kotlinx.serialization.Serializable
+import ua.edu.znu.geoquizcomposeedu.educational.navigation.data.Subject
 
 @Serializable
 sealed class Routes {
@@ -12,5 +13,5 @@ sealed class Routes {
 
     // data class - because it has a custom primitive to pass between screens
     @Serializable
-    data class SecondScreen(val customPrimitive: String) : Routes()
+    data class SecondScreen(val subject: Subject) : Routes()
 }
