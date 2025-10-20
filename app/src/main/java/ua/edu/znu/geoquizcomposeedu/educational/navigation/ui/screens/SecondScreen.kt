@@ -24,9 +24,11 @@ fun SecondScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(text = "${subject.text} - ${subject.value}")
+        Text(text = "${subject.text} - ${subject.value} - ${subject.category.name}")
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onNavigateBack) {
+        Button(
+            onNavigateBack
+        ) {
             Text("Go Back")
         }
     }

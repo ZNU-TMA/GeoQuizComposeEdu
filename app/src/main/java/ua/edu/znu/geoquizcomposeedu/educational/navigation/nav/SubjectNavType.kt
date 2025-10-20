@@ -1,15 +1,20 @@
 package ua.edu.znu.geoquizcomposeedu.educational.navigation.nav
 
 import android.net.Uri
+import android.util.Log
 import androidx.navigation.NavType
 import androidx.savedstate.SavedState
 import kotlinx.serialization.json.Json
 import ua.edu.znu.geoquizcomposeedu.educational.navigation.data.Subject
 
+private const val TAG = "SubjectNavType"
+
 /**
  * Custom navigation type for the Subject class.
  * NavType will be used by compose internally to put subjectType object into a bundle,
  * and later retrieve it.
+ * SubjectNavType serializes/deserializes the whole Subject (including its Category)
+ * with kotlinx.serialization (and Category is annotated @Serializable).
  * You need to implement the serialization and deserialization of the custom type
  * by Ctrl+Insert -> Implement Methods.
  * */
@@ -27,6 +32,7 @@ object SubjectNavType {
             key: String,
             value: Subject
         ) {
+            Log.d(TAG, "put: bundle = $bundle, key = $key, value = $value")
             bundle.putString(key, Json.encodeToString(value))
         }
 
@@ -39,27 +45,26 @@ object SubjectNavType {
             bundle: SavedState,
             key: String
         ): Subject? {
+            Log.d(TAG, "get: bundle = $bundle, key = $key")
             return Json.decodeFromString(bundle.getString(key) ?: return null)
         }
 
         /**
          * Deserialize the string to the custom type.
-         * The string is obtained from the navigation framework.
-         * Also uses when the custom type object is returned as a string result from
-         * the navigated screen.
+         * Use when a custom type is encoded into a route string
+         * (building/parsing ".../screen/{arg}").
          */
         override fun parseValue(value: String): Subject {
+            Log.d(TAG, "parseValue: value = $value")
             return Json.decodeFromString(Uri.decode(value))
         }
 
         /*!!! MANUALLY ADDED !!!
         * Serialize the custom type to the string.
         * The string is then passed to the navigation framework.
-        * Uses when the custom type object is passed to UI as a string.
-        * Also used when the custom type needs to be serialized to a string for display,
-        * route arguments, or returned results.
          */
         override fun serializeAsValue(value: Subject): String {
+            Log.d(TAG, "serializeAsValue: value = $value")
             return Uri.encode(Json.encodeToString(value))
         }
     }

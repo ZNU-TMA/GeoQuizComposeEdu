@@ -17,7 +17,7 @@ import ua.edu.znu.geoquizcomposeedu.educational.navigation.data.SubjectRepositor
 fun FirstScreen(
     onListItemClick: (Subject) -> Unit
 ) {
-     LazyColumn(
+    LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(
@@ -25,7 +25,7 @@ fun FirstScreen(
             key = { subject -> subject.id }
         ) { subject ->
             Text(
-                text = "${subject.text} - ${subject.value}",
+                text = "${subject.text} - ${subject.value} - ${subject.category.name}",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)

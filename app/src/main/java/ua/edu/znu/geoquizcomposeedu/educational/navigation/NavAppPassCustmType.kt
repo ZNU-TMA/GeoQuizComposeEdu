@@ -1,5 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.educational.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -25,11 +26,11 @@ fun NavAppPassCustomType(innerPadding: PaddingValues) {
     ) {
         composable<Routes.FirstScreen> {
             FirstScreen(
-                onListItemClick = {
-                    /* Navigate to second screen with primitive parameter pass
-                       and add the second screen to NavController stack */
-                        subject ->
-                    navController.navigate(Routes.SecondScreen(subject))
+                onListItemClick = { subject ->
+                    val durationMs = kotlin.system.measureTimeMillis {
+                        navController.navigate(Routes.SecondScreen(subject))
+                    }
+                    Log.d("NavTiming", "navigate took $durationMs ms")
                 }
             )
         }
