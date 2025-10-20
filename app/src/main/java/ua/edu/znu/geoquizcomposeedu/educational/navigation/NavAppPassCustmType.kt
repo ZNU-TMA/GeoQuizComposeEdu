@@ -15,6 +15,7 @@ import ua.edu.znu.geoquizcomposeedu.educational.navigation.nav.SubjectNavType
 import ua.edu.znu.geoquizcomposeedu.educational.navigation.ui.screens.FirstScreen
 import ua.edu.znu.geoquizcomposeedu.educational.navigation.ui.screens.SecondScreen
 import kotlin.reflect.typeOf
+import kotlin.system.measureTimeMillis
 
 @Composable
 fun NavAppPassCustomType(innerPadding: PaddingValues) {
@@ -27,7 +28,7 @@ fun NavAppPassCustomType(innerPadding: PaddingValues) {
         composable<Routes.FirstScreen> {
             FirstScreen(
                 onListItemClick = { subject ->
-                    val durationMs = kotlin.system.measureTimeMillis {
+                    val durationMs = measureTimeMillis {
                         navController.navigate(Routes.SecondScreen(subject))
                     }
                     Log.d("NavTiming", "navigate took $durationMs ms")
@@ -36,7 +37,9 @@ fun NavAppPassCustomType(innerPadding: PaddingValues) {
         }
 
         composable<Routes.SecondScreen>(
-            /*Custom type map for the custom type*/
+            /*Now we use defined custom NavType instance with Navigation Graph
+              as element of the Map<KType, NavType<*>> of  NavGraphBuilder.composable
+              typeMap argument.*/
             typeMap = mapOf(
                 typeOf<Subject>() to SubjectNavType.subjectType,
             )

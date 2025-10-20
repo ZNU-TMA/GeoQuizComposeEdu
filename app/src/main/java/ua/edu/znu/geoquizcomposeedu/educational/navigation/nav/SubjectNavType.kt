@@ -1,6 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.educational.navigation.nav
 
-import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.navigation.NavType
 import androidx.savedstate.SavedState
@@ -23,9 +23,9 @@ object SubjectNavType {
         isNullableAllowed = false
     ) {
         /**
-         * Serialize the custom type in the string and save it to the bundle.
-         * The bundle is passed to the navigation framework.
-         * The use URL encoding form Bundle is not necessary.
+         * Inserts a Parcelable value into the mapping of this Bundle (without JSON serialization),
+         * replacing any existing value for the given key.
+         * Either key or value may be null.
          */
         override fun put(
             bundle: SavedState,
@@ -33,39 +33,43 @@ object SubjectNavType {
             value: Subject
         ) {
             Log.d(TAG, "put: bundle = $bundle, key = $key, value = $value")
-            bundle.putString(key, Json.encodeToString(value))
+            bundle.putParcelable(key, value)
         }
 
         /**
-         * Retrieve serialized in string the custom type from the bundle
-         * and deserialize it to the custom type.
-         * The bundle is passed from the navigation framework.
+         * Returns the value associated with the given key (without JSON serialization) or null if:
+         * - No mapping of the desired type exists for the given key.
+         * - A null value is explicitly associated with the key.
+         * -The object is not of type clazz.
          */
         override fun get(
             bundle: SavedState,
             key: String
         ): Subject? {
             Log.d(TAG, "get: bundle = $bundle, key = $key")
-            return Json.decodeFromString(bundle.getString(key) ?: return null)
+            // for backwards compatibility
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(key, Subject::class.java)
+            } else {
+                @Suppress("DEPRECATION") // for backwards compatibility
+                bundle.getParcelable(key)
+            }
         }
 
         /**
-         * Deserialize the string to the custom type.
-         * Use when a custom type is encoded into a route string
-         * (building/parsing ".../screen/{arg}").
+         * Decodes and deserializes the given JSON string to the value of Subject type.
          */
         override fun parseValue(value: String): Subject {
             Log.d(TAG, "parseValue: value = $value")
-            return Json.decodeFromString(Uri.decode(value))
+            return Json.decodeFromString(value)
         }
 
         /*!!! MANUALLY ADDED !!!
-        * Serialize the custom type to the string.
-        * The string is then passed to the navigation framework.
+        * Serializes the value of Subject type into an equivalent JSON.
          */
         override fun serializeAsValue(value: Subject): String {
             Log.d(TAG, "serializeAsValue: value = $value")
-            return Uri.encode(Json.encodeToString(value))
+            return Json.encodeToString(value)
         }
     }
 }
