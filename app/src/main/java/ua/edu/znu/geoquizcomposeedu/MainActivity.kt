@@ -4,8 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import ua.edu.znu.geoquizcomposeedu.educational.navigation.NavAppPassCustomType
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.navigation.compose.rememberNavController
+import ua.edu.znu.geoquizcomposeedu.nav.NavPassQuestion
+import ua.edu.znu.geoquizcomposeedu.ui.components.AppFloatingActionButton
+import ua.edu.znu.geoquizcomposeedu.ui.components.AppSnackbar
+import ua.edu.znu.geoquizcomposeedu.ui.components.BottomAppBar
+import ua.edu.znu.geoquizcomposeedu.ui.components.GeoQuizTopAppBar
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,26 +22,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GeoQuizComposeEduTheme(
-//                darkTheme = true
-            ) {
-//                val snackbarHostState = remember { SnackbarHostState() }
+            GeoQuizComposeEduTheme {
+                val navController = rememberNavController()
+                val snackbarHostState = remember { SnackbarHostState() }
                 Scaffold(
                     topBar = {
-//                        GeoQuizTopAppBar()
+                        GeoQuizTopAppBar()
                     },
                     floatingActionButton = {
                         /* It need only on the QuestionListScreen */
-//                        AppFloatingActionButton(
-//                            onFabClick = {/* TODO: Navigate to add question screen */ }
-//                        )
+                        AppFloatingActionButton(
+                            onFabClick = {/* TODO: Navigate to add question screen */ }
+                        )
                     },
-//                    floatingActionButtonPosition = FabPosition.End,
+                    floatingActionButtonPosition = FabPosition.End,
                     bottomBar = {
-//                        BottomAppBar()
+                        BottomAppBar(navController)
                     },
                     snackbarHost = {
-//                        AppSnackbar(snackbarHostState = snackbarHostState)
+                        AppSnackbar(snackbarHostState = snackbarHostState)
                     },
                 ) { innerPadding ->
                     // main content
@@ -50,7 +57,8 @@ class MainActivity : ComponentActivity() {
 //                    UpdateQuestionScreen(innerPadding, sampleQuestion)
 //                    val sampleQuestion = Question(questionText = "", answer = false)
 //                    AddQuestionScreen(innerPadding)
-                    NavAppPassCustomType(innerPadding)
+//                    NavAppPassCustomType(innerPadding)
+                    NavPassQuestion(innerPadding, snackbarHostState, navController)
                     /* For Scaffold innerPadding study */
 //                    Text(
 //                        text = "Hello, World!",

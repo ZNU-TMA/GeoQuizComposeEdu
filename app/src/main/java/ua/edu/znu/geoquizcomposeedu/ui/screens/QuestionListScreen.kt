@@ -51,6 +51,7 @@ private const val TAG = "QuestionListScreen"
 @Composable
 fun QuestionListScreen(
     innerPadding: PaddingValues,
+    onEditQuestionClick: (Question) -> Unit = {},
 ) {
     val questionRepository = QuestionRepositoryImpl.getInstance()
 
@@ -91,6 +92,9 @@ fun QuestionListScreen(
                     question,
                     onQuestionDeleted = {
                         questionListViewModel.onRemoveQuestionClick(question)
+                    },
+                    onEditQuestionClick = {
+                        onEditQuestionClick(question)
                     }
                 )
             }

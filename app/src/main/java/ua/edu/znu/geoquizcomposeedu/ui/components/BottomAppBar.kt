@@ -10,15 +10,25 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import ua.edu.znu.geoquizcomposeedu.R
+import ua.edu.znu.geoquizcomposeedu.nav.Routes
 
 @Composable
-fun BottomAppBar() {
+fun BottomAppBar(
+    navController: NavHostController
+) {
     NavigationBar {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
         NavigationBarItem(
             selected = true,
-            onClick = { /* Handle menu click */ },
+            onClick = {
+                navController.navigate(Routes.Home)
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
@@ -29,7 +39,7 @@ fun BottomAppBar() {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { /* Handle menu click */ },
+            onClick = { navController.navigate(Routes.QuestionList) },
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.List,
