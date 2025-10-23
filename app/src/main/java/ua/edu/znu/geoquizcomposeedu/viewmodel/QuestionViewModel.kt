@@ -14,4 +14,6 @@ class QuestionViewModel(private val questionRepository: QuestionRepository) :
     fun onAddQuestionClick(question: Question) = questionRepository.addQuestion(question)
 
     fun onUpdateQuestionClick(question: Question) = questionRepository.updateQuestion(question)
+
+    fun onRemoveQuestionClick(question: Question) = questionRepository.removeQuestion(question)
 }

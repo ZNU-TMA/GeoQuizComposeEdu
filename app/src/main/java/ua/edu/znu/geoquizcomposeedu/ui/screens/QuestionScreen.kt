@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,16 +37,15 @@ private const val TAG = "QuestionScreen"
 
 @Composable
 fun QuestionScreen(
-    innerPadding: PaddingValues,
+//    innerPadding: PaddingValues, // moved to NavHost
     initialQuestion: Question?,
-//    onSubmit: (Question) -> Unit,
-    buttonTextRes: Int
+    buttonTextRes: Int,
+    onNavigateBack: () -> Unit = {}
 ) {
     val questionRepository = QuestionRepositoryImpl.getInstance()
 
     val questionViewModel: QuestionViewModel = viewModel(
         factory = ViewModelFactory(QuestionViewModel::class.java) {
-//            QuestionViewModel(questionRepository, initialQuestion)
             QuestionViewModel(questionRepository)
         }
     )
@@ -67,7 +65,6 @@ fun QuestionScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
             // To hide virtual keyboard when tapping outside TextField
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
@@ -112,48 +109,31 @@ fun QuestionScreen(
             } else {
                 questionViewModel.onAddQuestionClick(question)
             }
+            onNavigateBack()
             Log.d(
                 TAG,
                 "Question bank: ${questionRepository.getQuestionListState().value}"
             )
-//            onSubmit(question)
         }) {
             Text(stringResource(buttonTextRes))
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {
+            questionViewModel.onRemoveQuestionClick(initialQuestion!!)
+            onNavigateBack()
+            Log.d(
+                TAG,
+                "Question bank: ${questionRepository.getQuestionListState().value}"
+            )
+        }) {
+            Text(stringResource(R.string.remove_question))
+        }
     }
-}
-
-@Composable
-fun UpdateQuestionScreen(
-    innerPadding: PaddingValues,
-    question: Question,
-//    onBack: () -> Unit = {}
-) {
-    QuestionScreen(
-        innerPadding = innerPadding,
-        initialQuestion = question,
-//        onSubmit = { onBack() },
-        buttonTextRes = R.string.update_question
-    )
-}
-
-@Composable
-fun AddQuestionScreen(
-    innerPadding: PaddingValues,
-//    onBack: () -> Unit = {}
-) {
-    QuestionScreen(
-        innerPadding = innerPadding,
-        initialQuestion = null,
-//        onSubmit = { onBack() },
-        buttonTextRes = R.string.add_question
-    )
 }
 
 @Preview(showSystemUi = true)
 @Composable
 fun QuestionScreenPreview() {
-    val innerPadding = PaddingValues(16.dp)
     val sampleQuestion = QuestionRepositoryImpl.getInstance().getQuestionByIndex(0)
-    UpdateQuestionScreen(innerPadding, sampleQuestion)
+    QuestionScreen(sampleQuestion, R.string.update_question)
 }

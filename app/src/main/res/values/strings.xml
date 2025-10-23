@@ -25,4 +25,5 @@
     <string name="home">Quiz</string>
     <string name="question">Question</string>
     <string name="is_true">Is true</string>
+    <string name="remove_question">Remove</string>
 </resources>

@@ -4,13 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
 import ua.edu.znu.geoquizcomposeedu.nav.NavPassQuestion
-import ua.edu.znu.geoquizcomposeedu.ui.components.AppFloatingActionButton
 import ua.edu.znu.geoquizcomposeedu.ui.components.AppSnackbar
 import ua.edu.znu.geoquizcomposeedu.ui.components.BottomAppBar
 import ua.edu.znu.geoquizcomposeedu.ui.components.GeoQuizTopAppBar
@@ -31,11 +29,11 @@ class MainActivity : ComponentActivity() {
                     },
                     floatingActionButton = {
                         /* It need only on the QuestionListScreen */
-                        AppFloatingActionButton(
-                            onFabClick = {/* TODO: Navigate to add question screen */ }
-                        )
+//                        AppFloatingActionButton(
+//                            onFabClick = {/* Implemented in QuestionListScreen */ }
+//                        )
                     },
-                    floatingActionButtonPosition = FabPosition.End,
+//                    floatingActionButtonPosition = FabPosition.End,
                     bottomBar = {
                         BottomAppBar(navController)
                     },
