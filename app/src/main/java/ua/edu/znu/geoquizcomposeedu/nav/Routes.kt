@@ -13,5 +13,8 @@ sealed class Routes {
     data object QuestionList : Routes()
 
     @Serializable
-    data class QuestionDetail(val question: Question) : Routes()
+    data class QuestionEdit(val question: Question) : Routes()
+
+    @Serializable
+    data object QuestionAdd : Routes()
 }
