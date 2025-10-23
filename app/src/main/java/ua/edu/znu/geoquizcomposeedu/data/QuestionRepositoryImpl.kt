@@ -4,7 +4,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDataSource):QuestionRepository {
+class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDataSource) :
+    QuestionRepository {
     // Singleton pattern provides a single instance of the repository with application
     companion object {
         @Volatile
@@ -31,32 +32,37 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
     // so that any changes to the list will be emitted to collectors
     private val questionsMutableStateFlow: MutableStateFlow<List<Question>> =
         MutableStateFlow(getQuestions())
+//    private val _questions = MutableStateFlow<List<Question>>(getQuestions())
+//    val questionsFlow: StateFlow<List<Question>> = _questions
 
     override fun getQuestionListState(): StateFlow<List<Question>> {
         return questionsMutableStateFlow
     }
 
-//    override fun getQuestionState(question: Question): StateFlow<Question> {
-//        val questionStateFlow = MutableStateFlow(question)
-//        return questionStateFlow
-//    }
-
     override fun addQuestion(question: Question) {
+        // Add to data source
+        questionDataSource.addQuestion(question)
         questionsMutableStateFlow.update { oldQuestions ->
             if (oldQuestions.contains(question)) oldQuestions else oldQuestions + question
         }
     }
 
     override fun updateQuestion(updatedQuestion: Question) {
+        // Update in data source
+        questionDataSource.updateQuestion(updatedQuestion)
+        // Update in StateFlow
         questionsMutableStateFlow.update { oldQuestions ->
             oldQuestions.map {
                 if (it.id == updatedQuestion.id) updatedQuestion else it
             }
         }
-//        Log.d(TAG, "questionsMutableStateFlow: ${questionsMutableStateFlow.value}")
     }
 
     override fun removeQuestion(question: Question) {
+        // Remove from data source
+        questionDataSource.removeQuestion(question)
+        // Update StateFlow
         questionsMutableStateFlow.update { oldQuestions -> oldQuestions - question }
+//        _questions.value = _questions.value.filter { it.id != question.id }
     }
 }

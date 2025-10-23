@@ -23,4 +23,6 @@
     <string name="is_answer_true">Правильна відповідь Так?</string>
     <string name="update_question">Оновити</string>
     <string name="home">Тест</string>
+    <string name="question">Питання</string>
+    <string name="is_true">Це так?</string>
 </resources>

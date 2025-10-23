@@ -23,4 +23,6 @@
     <string name="is_answer_true">Is answer True?</string>
     <string name="update_question">Update</string>
     <string name="home">Quiz</string>
+    <string name="question">Question</string>
+    <string name="is_true">Is true</string>
 </resources>
