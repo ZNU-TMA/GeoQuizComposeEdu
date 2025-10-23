@@ -2,13 +2,10 @@ package ua.edu.znu.geoquizcomposeedu.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import ua.edu.znu.geoquizcomposeedu.R
+import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepositoryImpl
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
 import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
@@ -40,33 +38,16 @@ import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
 private const val TAG = "MainScreen"
 
 data class MainScreenState(
-    val currentIndex: Int = 0
+    val currentIndex: Int = 0,
+    val questionList: List<Question> = emptyList()
 )
 
 @Composable
 fun MainScreen(
-    innerPadding: PaddingValues,
+//    innerPadding: PaddingValues, // moved to NavHost
     snackbarHostState: SnackbarHostState,
 ) {
     val questionRepository = QuestionRepositoryImpl.getInstance()
-
-    // The default viewModel() only works for ViewModels with no-argument constructors.
-    // Since your MainViewModel requires a repository, we need use
-    // a custom ViewModelProvider.Factory
-//    val mainViewModel: MainViewModel = viewModel(
-//        factory = object : ViewModelProvider.Factory {
-//            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                // invoke warning "Unchecked cast: ViewModel to T"
-////                return MainViewModel(questionRepository) as T
-//                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-//                    @Suppress("UNCHECKED_CAST")
-//                    return MainViewModel(questionRepository) as T
-//                }
-//                throw IllegalArgumentException("Unknown ViewModel class")
-//            }
-//        }
-//    )
-
     // Using the reusable ViewModelFactory to create MainViewModel
     val mainViewModel: MainViewModel = viewModel(
         factory = ViewModelFactory(MainViewModel::class.java) {
@@ -86,7 +67,6 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -137,16 +117,16 @@ fun MainScreen(
         }) {
             Text(stringResource(id = R.string.next_button))
         }
-        Box(
-            modifier = Modifier.height(80.dp)
-        ) {
-            if (mainViewModel.isLastQuestion()) {
-                logCompositionLifecycle("LastQuestionText")
-                Text(
-                    text = "This is the last question"
-                )
-            }
-        }
+//        Box(
+//            modifier = Modifier.height(80.dp)
+//        ) {
+//            if (mainViewModel.isLastQuestion()) {
+//                logCompositionLifecycle("LastQuestionText")
+//                Text(
+//                    text = "This is the last question"
+//                )
+//            }
+//        }
     }
 }
 
@@ -154,11 +134,8 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
     GeoQuizComposeEduTheme(darkTheme = true) {
-        // Provide empty padding for preview
-        val innerPadding = PaddingValues(16.dp)
         val snackbarHostState = SnackbarHostState()
         MainScreen(
-            innerPadding = innerPadding,
             snackbarHostState = snackbarHostState
         )
     }
