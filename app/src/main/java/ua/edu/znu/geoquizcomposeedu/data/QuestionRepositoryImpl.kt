@@ -1,68 +1,93 @@
 package ua.edu.znu.geoquizcomposeedu.data
 
-import kotlinx.coroutines.flow.MutableStateFlow
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 
-class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDataSource) :
+private const val TAG = "QuestionRepositoryImpl"
+
+class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDao) :
     QuestionRepository {
     // Singleton pattern provides a single instance of the repository with application
     companion object {
         @Volatile
-        private var INSTANCE: QuestionRepositoryImpl? = null
+        private var instance: QuestionRepositoryImpl? = null
 
-        fun getInstance(): QuestionRepositoryImpl {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: QuestionRepositoryImpl(QuestionDataSource()).also { INSTANCE = it }
+        // Application-scoped CoroutineScope used for stateIn so we reuse a single scope
+        // instead of creating a new short-lived scope each time. This keeps the flow
+        // collection active for the lifetime of the application process.
+        private val applicationScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+        fun getInstance(questionDao: QuestionDao): QuestionRepositoryImpl {
+            return instance ?: synchronized(this) {
+                instance ?: QuestionRepositoryImpl(questionDao).also { instance = it }
             }
         }
+
+//        fun getInstance(): QuestionRepositoryImpl {
+//            return INSTANCE ?: synchronized(this) {
+//                INSTANCE ?: QuestionRepositoryImpl(QuestionDao()).also { INSTANCE = it }
+//            }
+//        }
     }
 
-    private fun getQuestions(): List<Question> {
-        return questionDataSource.getQuestions()
+    init {
+        Log.d(TAG, "initialized QuestionRepositoryImpl")
     }
 
     override fun getQuestionByIndex(index: Int): Question {
-        return getQuestions()[index]
+        // Accessing the questions from the StateFlow to ensure we get the latest data
+        return getQuestionListState().value[index]
     }
 
-    override fun getQuestionBankSize() = getQuestions().size
+    override fun getQuestionBankSize() = getQuestionListState().value.size
 
-    // Using MutableStateFlow for observable question list
-    // so that any changes to the list will be emitted to collectors
-    private val questionsMutableStateFlow: MutableStateFlow<List<Question>> =
-        MutableStateFlow(getQuestions())
-//    private val _questions = MutableStateFlow<List<Question>>(getQuestions())
-//    val questionsFlow: StateFlow<List<Question>> = _questions
+    // Expose the Room Flow as a StateFlow so collectors (UI) get DB updates automatically.
+    // Function stateIn converts a Room's Flow to a StateFlow, which holds the latest list of questions.
+    // Use an application-scoped CoroutineScope so the stateIn collection lives for the
+    // whole app process and emits DB updates to collectors reliably.
+    private val questionsStateFlow: StateFlow<List<Question>> =
+        questionDataSource.getQuestions()
+            .stateIn(
+                scope = applicationScope,
+                started = SharingStarted.Eagerly,
+                initialValue = emptyList()
+            )
 
     override fun getQuestionListState(): StateFlow<List<Question>> {
-        return questionsMutableStateFlow
+        return questionsStateFlow
     }
 
-    override fun addQuestion(question: Question) {
-        // Add to data source
+    // inside QuestionRepositoryImpl
+    override suspend fun addQuestion(question: Question) {
+        // Insert into DB and let the Room Flow emit the changed list
         questionDataSource.addQuestion(question)
-        questionsMutableStateFlow.update { oldQuestions ->
-            if (oldQuestions.contains(question)) oldQuestions else oldQuestions + question
-        }
+        // kept for debugging/logging if needed; do not try to maintain a separate in-memory list
+        Log.d(
+            TAG,
+            "addQuestion: inserted=$question, totalAfter=${questionsStateFlow.value.size} (may not reflect the latest state yet)"
+        )
     }
 
-    override fun updateQuestion(updatedQuestion: Question) {
-        // Update in data source
+    override suspend fun updateQuestion(updatedQuestion: Question) {
+        // Update in data source; Room Flow will propagate changes
         questionDataSource.updateQuestion(updatedQuestion)
-        // Update in StateFlow
-        questionsMutableStateFlow.update { oldQuestions ->
-            oldQuestions.map {
-                if (it.id == updatedQuestion.id) updatedQuestion else it
-            }
-        }
+        Log.d(
+            TAG,
+            "updateQuestion: updated=${updatedQuestion}, totalNow(before update propagates)=${questionsStateFlow.value.size}"
+        )
     }
 
-    override fun removeQuestion(question: Question) {
-        // Remove from data source
+    override suspend fun removeQuestion(question: Question) {
+        // Remove from data source; Room Flow will propagate changes
         questionDataSource.removeQuestion(question)
-        // Update StateFlow
-        questionsMutableStateFlow.update { oldQuestions -> oldQuestions - question }
-//        _questions.value = _questions.value.filter { it.id != question.id }
+        Log.d(
+            TAG,
+            "removeQuestion: removed=${question}, totalAfter (may not reflect removal yet)=${questionsStateFlow.value.size}"
+        )
     }
 }
