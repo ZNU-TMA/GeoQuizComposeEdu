@@ -27,12 +27,12 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         GeoQuizTopAppBar()
                     },
-                    floatingActionButton = {
-                        /* It need only on the QuestionListScreen */
+//                    floatingActionButton = {
+//                        /* It need only on the QuestionListScreen */
 //                        AppFloatingActionButton(
 //                            onFabClick = {/* Implemented in QuestionListScreen */ }
 //                        )
-                    },
+//                    },
 //                    floatingActionButtonPosition = FabPosition.End,
                     bottomBar = {
                         BottomAppBar(navController)

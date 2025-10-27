@@ -22,14 +22,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ua.edu.znu.geoquizcomposeedu.GeoQuizApplication
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
-import ua.edu.znu.geoquizcomposeedu.data.QuestionRepositoryImpl
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionViewModel
 import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
 
@@ -42,7 +43,7 @@ fun QuestionScreen(
     buttonTextRes: Int,
     onNavigateBack: () -> Unit = {}
 ) {
-    val questionRepository = QuestionRepositoryImpl.getInstance()
+    val questionRepository = (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
 
     val questionViewModel: QuestionViewModel = viewModel(
         factory = ViewModelFactory(QuestionViewModel::class.java) {
@@ -134,6 +135,9 @@ fun QuestionScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun QuestionScreenPreview() {
-    val sampleQuestion = QuestionRepositoryImpl.getInstance().getQuestionByIndex(0)
+    val sampleQuestion = Question(
+        questionText = "Канберра - це столиця Австралії",
+        answer = true
+    )
     QuestionScreen(sampleQuestion, R.string.update_question)
 }

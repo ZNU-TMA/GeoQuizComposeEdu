@@ -25,6 +25,7 @@ fun NavPassQuestion(
     NavHost(
         navController = navController,
         startDestination = Routes.Home,
+//        startDestination = Routes.QuestionList,
         modifier = Modifier.padding(innerPadding)
     ) {
         composable<Routes.Home> {

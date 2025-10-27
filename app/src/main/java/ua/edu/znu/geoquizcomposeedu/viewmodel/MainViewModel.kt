@@ -62,7 +62,7 @@ class MainViewModel(private val questionRepository: QuestionRepository) : ViewMo
 
     // Works correctly because it may is a pure function
     // that always reflects the current state.
-    fun isLastQuestion(): Boolean {
-        return currentIndex == questionRepository.getQuestionBankSize() - 1
-    }
+//    fun isLastQuestion(): Boolean {
+//        return currentIndex == questionRepository.getQuestionBankSize() - 1
+//    }
 }

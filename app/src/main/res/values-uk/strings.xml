@@ -26,4 +26,5 @@
     <string name="question">Питання</string>
     <string name="is_true">Це так?</string>
     <string name="remove_question">Видалити</string>
+    <string name="no_questions_available">No questions available</string>
 </resources>

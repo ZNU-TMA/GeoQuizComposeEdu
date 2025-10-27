@@ -27,11 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import ua.edu.znu.geoquizcomposeedu.GeoQuizApplication
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
-import ua.edu.znu.geoquizcomposeedu.data.QuestionRepositoryImpl
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
-import ua.edu.znu.geoquizcomposeedu.util.logCompositionLifecycle
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
 
@@ -47,22 +46,23 @@ fun MainScreen(
 //    innerPadding: PaddingValues, // moved to NavHost
     snackbarHostState: SnackbarHostState,
 ) {
-    val questionRepository = QuestionRepositoryImpl.getInstance()
-    // Using the reusable ViewModelFactory to create MainViewModel
+    val questionRepository =
+        (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
+
     val mainViewModel: MainViewModel = viewModel(
         factory = ViewModelFactory(MainViewModel::class.java) {
             MainViewModel(questionRepository)
         }
     )
 
-    val context = LocalContext.current
-
     // Use StateFlow in ViewModel to collect screen state as State in Composable
     val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
 
-    logCompositionLifecycle("MainScreen")
-    // For scrolling in the horizontal layout
+//    logCompositionLifecycle("MainScreen")
+
     val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -82,7 +82,6 @@ fun MainScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val scope = rememberCoroutineScope()
             Button(
                 onClick = {
                     val messageId = mainViewModel.onAnswerButtonClick(true)

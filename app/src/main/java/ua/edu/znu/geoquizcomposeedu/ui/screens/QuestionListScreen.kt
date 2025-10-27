@@ -36,9 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import ua.edu.znu.geoquizcomposeedu.GeoQuizApplication
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
-import ua.edu.znu.geoquizcomposeedu.data.QuestionRepositoryImpl
 import ua.edu.znu.geoquizcomposeedu.nav.Routes
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionListViewModel
 import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
@@ -52,7 +52,7 @@ fun QuestionListScreen(
 //    innerPadding: PaddingValues, // moved to NavHost
     onEditQuestionClick: (Question) -> Unit = {},
 ) {
-    val questionRepository = QuestionRepositoryImpl.getInstance()
+    val questionRepository = (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
     // Using a generic ViewModelFactory to reduce boilerplate code
     val questionListViewModel: QuestionListViewModel = viewModel(
         factory = ViewModelFactory(QuestionListViewModel::class.java) {
