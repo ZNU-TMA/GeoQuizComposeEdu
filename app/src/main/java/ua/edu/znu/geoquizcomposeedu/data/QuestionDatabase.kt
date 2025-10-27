@@ -20,7 +20,7 @@ abstract class QuestionDatabase : RoomDatabase() {
                     QuestionDatabase::class.java,
                     "question_database"
                 )
-                    .createFromAsset("database/question_database.db")
+//                    .createFromAsset("database/question_database.db")
                     .build()
                     .also { instance = it }
             }
