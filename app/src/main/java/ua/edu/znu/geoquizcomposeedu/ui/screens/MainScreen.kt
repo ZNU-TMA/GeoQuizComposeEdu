@@ -15,7 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,15 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-import ua.edu.znu.geoquizcomposeedu.GeoQuizApplication
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
-import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
-import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
 
 private const val TAG = "MainScreen"
 
@@ -43,20 +37,23 @@ data class MainScreenState(
 
 @Composable
 fun MainScreen(
-//    innerPadding: PaddingValues, // moved to NavHost
     snackbarHostState: SnackbarHostState,
+    mainScreenState: MainScreenState,
+    getQuestionText: @Composable (Int) -> String,
+    onAnswerButtonClick: (Boolean) -> Int,
+    onNextQuestionButtonClick: () -> Unit,
 ) {
-    val questionRepository =
-        (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
-
-    val mainViewModel: MainViewModel = viewModel(
-        factory = ViewModelFactory(MainViewModel::class.java) {
-            MainViewModel(questionRepository)
-        }
-    )
-
-    // Use StateFlow in ViewModel to collect screen state as State in Composable
-    val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
+//    val questionRepository =
+//        (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
+//
+//    val mainViewModel: MainViewModel = viewModel(
+//        factory = ViewModelFactory(MainViewModel::class.java) {
+//            MainViewModel(questionRepository)
+//        }
+//    )
+//
+//    // Use StateFlow in ViewModel to collect screen state as State in Composable
+//    val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
 
 //    logCompositionLifecycle("MainScreen")
 
@@ -72,7 +69,8 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = mainViewModel.getQuestionByIndex(mainScreenState.currentIndex).questionText,
+//            text = mainViewModel.getQuestionByIndex(mainScreenState.currentIndex).questionText,
+            text = getQuestionText(mainScreenState.currentIndex),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(16.dp)
@@ -84,8 +82,8 @@ fun MainScreen(
         ) {
             Button(
                 onClick = {
-                    val messageId = mainViewModel.onAnswerButtonClick(true)
-//                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
+//                    val messageId = mainViewModel.onAnswerButtonClick(true)
+                    val messageId = onAnswerButtonClick(true)
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             context.getString(messageId)
@@ -98,8 +96,8 @@ fun MainScreen(
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
-                    val messageId = mainViewModel.onAnswerButtonClick(false)
-//                    Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
+//                    val messageId = mainViewModel.onAnswerButtonClick(false)
+                    val messageId = onAnswerButtonClick(false)
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             context.getString(messageId),
@@ -111,21 +109,12 @@ fun MainScreen(
             }
         }
         Button(onClick = {
-            mainViewModel.onNextQuestionButtonClick()
+//            mainViewModel.onNextQuestionButtonClick()
+            onNextQuestionButtonClick()
             Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
         }) {
             Text(stringResource(id = R.string.next_button))
         }
-//        Box(
-//            modifier = Modifier.height(80.dp)
-//        ) {
-//            if (mainViewModel.isLastQuestion()) {
-//                logCompositionLifecycle("LastQuestionText")
-//                Text(
-//                    text = "This is the last question"
-//                )
-//            }
-//        }
     }
 }
 
@@ -134,8 +123,17 @@ fun MainScreen(
 fun MainScreenPreview() {
     GeoQuizComposeEduTheme(darkTheme = true) {
         val snackbarHostState = SnackbarHostState()
+        val previewState = MainScreenState(
+            currentIndex = 0,
+            questionList = emptyList()
+        )
+
         MainScreen(
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
+            mainScreenState = previewState,
+            getQuestionText = { _ -> stringResource(R.string.question_australia) },
+            onAnswerButtonClick = { _ -> R.string.true_button },
+            onNextQuestionButtonClick = {}
         )
     }
 }

@@ -1,6 +1,5 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -24,45 +23,37 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import ua.edu.znu.geoquizcomposeedu.GeoQuizApplication
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
-import ua.edu.znu.geoquizcomposeedu.nav.Routes
-import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionListViewModel
-import ua.edu.znu.geoquizcomposeedu.viewmodel.ViewModelFactory
 
-private const val TAG = "QuestionListScreen"
+//private const val TAG = "QuestionListScreen"
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuestionListScreen(
-    navController: NavController,
-//    innerPadding: PaddingValues, // moved to NavHost
+//    navController: NavController,
+    questionList: List<Question>,
     onEditQuestionClick: (Question) -> Unit = {},
+    onAdd: () -> Unit = {}
 ) {
-    val questionRepository = (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
+//    val questionRepository = (LocalContext.current.applicationContext as GeoQuizApplication).questionRepository
     // Using a generic ViewModelFactory to reduce boilerplate code
-    val questionListViewModel: QuestionListViewModel = viewModel(
-        factory = ViewModelFactory(QuestionListViewModel::class.java) {
-            QuestionListViewModel(questionRepository)
-        }
-    )
+//    val questionListViewModel: QuestionListViewModel = viewModel(
+//        factory = ViewModelFactory(QuestionListViewModel::class.java) {
+//            QuestionListViewModel(questionRepository)
+//        }
+//    )
     // Use StateFlow in ViewModel to collect question list state as State in Composable.
-    val questionList: List<Question> by questionListViewModel.questionListFlow.collectAsStateWithLifecycle()
+//    val questionList: List<Question> by questionListViewModel.questionListFlow.collectAsStateWithLifecycle()
 
-    Log.d(TAG, "QuestionListScreen: questionList.size = ${questionList.size}")
+//    Log.d(TAG, "QuestionListScreen: questionList.size = ${questionList.size}")
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn {
@@ -81,7 +72,8 @@ fun QuestionListScreen(
         }
         FloatingActionButton(
             onClick = {
-                navController.navigate(Routes.QuestionAdd)
+//                navController.navigate(Routes.QuestionAdd)
+                onAdd()
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -166,6 +158,11 @@ fun QuestionCardPreview() {
 @Composable
 fun QuestionListScreenPreview() {
     QuestionListScreen(
-        navController = NavController(LocalContext.current),
+//        navController = NavController(LocalContext.current),
+        questionList = listOf(
+            Question(questionText = stringResource(R.string.question_australia), answer = true),
+            Question(questionText = stringResource(R.string.question_oceans), answer = true),
+            Question(questionText = stringResource(R.string.question_mideast), answer = false),
+        )
     )
 }
