@@ -18,6 +18,20 @@ fun QuestionScreenHost(
 ) {
     var textValue by rememberSaveable { mutableStateOf(initialQuestion?.questionText ?: "") }
     var isAnswerTrue by rememberSaveable { mutableStateOf(initialQuestion?.answer ?: false) }
+    val onSave = {
+        val question = initialQuestion?.copy(questionText = textValue, answer = isAnswerTrue)
+            ?: Question(questionText = textValue, answer = isAnswerTrue)
+        if (initialQuestion == null) questionViewModel.onAddQuestionClick(question)
+        else questionViewModel.onUpdateQuestionClick(question)
+        onDone()
+    }
+    val onRemove = initialQuestion?.let { q ->
+        {
+            questionViewModel.onRemoveQuestionClick(q)
+            onRemoveDone?.invoke()
+            Unit
+        }
+    }
 
     QuestionScreen(
         textValue = textValue,
@@ -25,18 +39,7 @@ fun QuestionScreenHost(
         isAnswerTrue = isAnswerTrue,
         onCheckedChange = { isAnswerTrue = it },
         buttonTextRes = buttonTextRes,
-        onSave = {
-            val question = initialQuestion?.copy(questionText = textValue, answer = isAnswerTrue)
-                ?: Question(questionText = textValue, answer = isAnswerTrue)
-            if (initialQuestion == null) questionViewModel.onAddQuestionClick(question)
-            else questionViewModel.onUpdateQuestionClick(question)
-            onDone()
-        },
-        onRemove = initialQuestion?.let { q ->
-            {
-                questionViewModel.onRemoveQuestionClick(q)
-                onRemoveDone?.invoke()
-            }
-        }
+        onSave = onSave,
+        onRemove = onRemove,
     )
 }
