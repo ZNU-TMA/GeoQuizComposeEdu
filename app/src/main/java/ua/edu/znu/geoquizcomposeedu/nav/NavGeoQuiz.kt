@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,7 +18,7 @@ import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.ui.screens.MainScreen
 import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionListScreen
-import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionScreen
+import ua.edu.znu.geoquizcomposeedu.ui.screens.QuestionScreenHost
 import ua.edu.znu.geoquizcomposeedu.viewmodel.MainViewModel
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionListViewModel
 import ua.edu.znu.geoquizcomposeedu.viewmodel.QuestionViewModel
@@ -112,37 +109,4 @@ fun NavPassQuestion(
             )
         }
     }
-}
-
-@Composable
-fun QuestionScreenHost(
-    initialQuestion: Question?,
-    buttonTextRes: Int,
-    questionViewModel: QuestionViewModel,
-    onDone: () -> Unit,
-    onRemoveDone: (() -> Unit)? = null
-) {
-    var textValue by rememberSaveable { mutableStateOf(initialQuestion?.questionText ?: "") }
-    var isAnswerTrue by rememberSaveable { mutableStateOf(initialQuestion?.answer ?: false) }
-
-    QuestionScreen(
-        textValue = textValue,
-        onTextChange = { textValue = it },
-        isAnswerTrue = isAnswerTrue,
-        onCheckedChange = { isAnswerTrue = it },
-        buttonTextRes = buttonTextRes,
-        onSave = {
-            val question = initialQuestion?.copy(questionText = textValue, answer = isAnswerTrue)
-                ?: Question(questionText = textValue, answer = isAnswerTrue)
-            if (initialQuestion == null) questionViewModel.onAddQuestionClick(question)
-            else questionViewModel.onUpdateQuestionClick(question)
-            onDone()
-        },
-        onRemove = initialQuestion?.let { q ->
-            {
-                questionViewModel.onRemoveQuestionClick(q)
-                onRemoveDone?.invoke()
-            }
-        }
-    )
 }
