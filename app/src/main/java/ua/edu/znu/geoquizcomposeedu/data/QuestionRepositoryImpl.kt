@@ -1,12 +1,14 @@
 package ua.edu.znu.geoquizcomposeedu.data
 
 import android.util.Log
+import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import ua.edu.znu.geoquizcomposeedu.R
 
 private const val TAG = "QuestionRepositoryImpl"
 
@@ -41,6 +43,11 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
 
     override fun getQuestionByIndex(index: Int): Question {
         // Accessing the questions from the StateFlow to ensure we get the latest data
+        val list = getQuestionListState().value
+        if (list.isEmpty()) {
+            Log.w(TAG, "getQuestionByIndex: question list empty, returning empty Question")
+            return Question(-1, "Жодного питання не було створено", true)
+        }
         return getQuestionListState().value[index]
     }
 
