@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.educational.room.data.onetomany
+package ua.edu.znu.geoquizcomposeedu.educational.room.onetomany
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

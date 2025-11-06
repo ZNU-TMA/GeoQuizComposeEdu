@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.educational
+package ua.edu.znu.geoquizcomposeedu.educational.lazycolumns
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

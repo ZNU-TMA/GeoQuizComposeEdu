@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.educational
+package ua.edu.znu.geoquizcomposeedu.educational.lazycolumns
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package ua.edu.znu.geoquizcomposeedu.educational.room.data.manytomany.data
+package ua.edu.znu.geoquizcomposeedu.educational.room.manytomany
 
 import androidx.room.Entity
 
