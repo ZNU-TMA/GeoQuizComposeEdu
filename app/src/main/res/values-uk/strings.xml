@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="true_button">Так</string>
+    <string name="false_button">Ні</string>
+    <string name="next_button">Далі</string>
+    <string name="question_australia">Канберра - це столиця Австралії</string>
+    <string name="question_oceans">Тихий океан більший, аніж Атлантичний океан</string>
+    <string name="question_mideast">Суецький канал поєднує Червоне море та Індійський океан</string>
+    <string name="question_africa">Витік річки Ніл знаходиться в Єгипті</string>
+    <string name="question_americas">Амазонка є найдовшою річкою у Америці</string>
+    <string name="question_asia">Озеро Байкал є найстарішим та найглибшим прісноводним озером</string>
+    <string name="correct_toast">Правильно!</string>
+    <string name="incorrect_toast">Неправильно!</string>
+    <string name="user_clicked">Клік на: %1$s</string>
+    <string name="user_photo">Фото користувача</string>
+    <string name="delete_user">Видалити користувача</string>
+    <string name="questions">Питання</string>
+    <string name="settings">Налаштування</string>
+    <string name="profile">Профіль</string>
+    <string name="main_menu">Головне меню</string>
+    <string name="more_actions">Додаткові дії</string>
+    <string name="add_question">Додати</string>
+    <string name="is_answer_true">Правильна відповідь Так?</string>
+    <string name="update_question">Оновити</string>
+    <string name="home">Тест</string>
+    <string name="question">Питання</string>
+    <string name="is_true">Це так?</string>
+    <string name="remove_question">Видалити</string>
+    <string name="no_questions_available">No questions available</string>
+</resources>
