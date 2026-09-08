@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+//    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
@@ -9,7 +9,9 @@ plugins {
 
 android {
     namespace = "ua.edu.znu.geoquizcomposeedu"
-    compileSdk = 36
+    compileSdk {
+        version = release(37)
+    }
 
     defaultConfig {
         applicationId = "ua.edu.znu.geoquizcomposeedu"
@@ -23,28 +25,14 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        create("profile") {
-            initWith(getByName("debug"))
-            isDebuggable = false
-            isProfileable = true
+            optimization {
+                enable = false
+            }
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        // jvmTarget is configured via the Kotlin JVM toolchain below
-//        jvmTarget = "11"
-    }
-    kotlin {
-        jvmToolchain(11)
     }
     buildFeatures {
         compose = true
