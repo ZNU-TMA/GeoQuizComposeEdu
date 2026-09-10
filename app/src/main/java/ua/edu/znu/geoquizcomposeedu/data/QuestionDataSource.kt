@@ -4,6 +4,9 @@ package ua.edu.znu.geoquizcomposeedu.data
  * Simple provider of the initial question list.
  * All state management and updates are centralized in the repository,
  * ensuring a single source of truth and observable state for your UI.
+ *
+ * DEPRECATED: This class is now deprecated in favor of using a Room database
+ * with QuestionDao and QuestionRepository for better data management and persistence.
  */
 class QuestionDataSource {
 
