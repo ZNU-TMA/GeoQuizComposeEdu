@@ -28,7 +28,7 @@ class ScholarshipCalculation {
      */
     fun stepUpCoefCalc(gpa: Int): Double {
         try {
-            Thread.sleep(100)
+            Thread.sleep(80)
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
