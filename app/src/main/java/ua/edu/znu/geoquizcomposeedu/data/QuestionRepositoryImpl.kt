@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlin.time.Duration.Companion.milliseconds
 
+/* We should not use Log.d because it can cause issues in unit tests,
+   especially when running on the JVM without Android.*/
 //private const val TAG = "QuestionRepositoryImpl"
 
 class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDao) :
@@ -68,7 +70,6 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
             )
 
     override fun getQuestionListState(): StateFlow<List<Question>> {
-        Thread.sleep(100) // Simulate a delay for testing purposes; in production, avoid blocking the main thread
         return questionsStateFlow
     }
 

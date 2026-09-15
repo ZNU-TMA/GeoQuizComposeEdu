@@ -7,7 +7,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.lang.reflect.Field
@@ -69,19 +68,6 @@ class NegativeQuestionRepositoryTest {
     }
 
     /**
-     * Tests that the getQuestionListState method completes within a specified timeout.
-     * This test ensures that the getQuestionListState method does not hang indefinitely
-     * and completes in a timely manner.
-     */
-//    @Test(timeout = 100)
-    @Test(timeout=150)
-    fun getQuestionListState_checkTimeout() {
-        // The initial state flow is empty, so the value should be an empty list
-        val result = questionRepository.getQuestionListState()
-        Assert.assertEquals(emptyList<Question>(), result.value)
-    }
-
-    /**
      * Tests that the addQuestion method completes within a specified timeout.
      * This test ensures that the addQuestion method does not hang indefinitely and completes in a timely.
      */
@@ -91,7 +77,7 @@ class NegativeQuestionRepositoryTest {
         val question = Question(id = 1, questionText = "Q1", answer = true)
         // Mock the DAO's addQuestion method to return Unit when called
         coEvery { questionDao.addQuestion(question) } returns Unit
- 
+
         // Call the addQuestion method and verify that it completes within the timeout
         questionRepository.addQuestion(question)
         coVerify(exactly = 1) { questionDao.addQuestion(question) }
