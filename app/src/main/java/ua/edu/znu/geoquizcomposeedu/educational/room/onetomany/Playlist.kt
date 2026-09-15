@@ -3,6 +3,7 @@ package ua.edu.znu.geoquizcomposeedu.educational.room.onetomany
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -14,7 +15,8 @@ import androidx.room.PrimaryKey
             childColumns = ["creatorId"],
             onDelete = CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["creatorId"])]
 )
 data class Playlist(
     @PrimaryKey(autoGenerate = true)
