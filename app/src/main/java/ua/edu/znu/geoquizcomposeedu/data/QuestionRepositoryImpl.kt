@@ -1,6 +1,5 @@
 package ua.edu.znu.geoquizcomposeedu.data
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -8,7 +7,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-private const val TAG = "QuestionRepositoryImpl"
+//private const val TAG = "QuestionRepositoryImpl"
 
 class QuestionRepositoryImpl private constructor(private val questionDataSource: QuestionDao) :
     QuestionRepository {
@@ -35,16 +34,19 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
 //        }
     }
 
-    init {
-        Log.d(TAG, "initialized QuestionRepositoryImpl")
-    }
+//    init {
+//        // Log.d(TAG, "initialized QuestionRepositoryImpl")
+//    }
 
     override fun getQuestionByIndex(index: Int): Question {
         // Accessing the questions from the StateFlow to ensure we get the latest data
         val list = getQuestionListState().value
-        if (list.isEmpty()) {
-            Log.d(TAG, "getQuestionByIndex: question list empty, returning empty Question")
-            return Question(-1, "Жодного питання не було створено", true)
+//        if (list.isEmpty()) {
+        if(list.isEmpty() || index < 0 || index >= list.size) {
+//            Log.d(TAG, "getQuestionByIndex: question list empty, returning empty Question")
+//            return Question(-1, "Жодного питання не було створено", true)
+            // Log.d(TAG, "getQuestionByIndex: index out of bounds, returning empty Question")
+            throw IndexOutOfBoundsException("Index out of bounds")
         }
         return getQuestionListState().value[index]
     }
@@ -72,27 +74,27 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
         // Insert into DB and let the Room Flow emit the changed list
         questionDataSource.addQuestion(question)
         // kept for debugging/logging if needed; do not try to maintain a separate in-memory list
-        Log.d(
-            TAG,
-            "addQuestion: inserted=$question, totalAfter=${questionsStateFlow.value.size} (may not reflect the latest state yet)"
-        )
+        // Log.d(
+        //     TAG,
+        //     "addQuestion: inserted=$question, totalAfter=${questionsStateFlow.value.size} (may not reflect the latest state yet)"
+        // )
     }
 
     override suspend fun updateQuestion(updatedQuestion: Question) {
         // Update in data source; Room Flow will propagate changes
         questionDataSource.updateQuestion(updatedQuestion)
-        Log.d(
-            TAG,
-            "updateQuestion: updated=${updatedQuestion}, totalNow(before update propagates)=${questionsStateFlow.value.size}"
-        )
+//        Log.d(
+//            TAG,
+//            "updateQuestion: updated=${updatedQuestion}, totalNow(before update propagates)=${questionsStateFlow.value.size}"
+//        )
     }
 
     override suspend fun removeQuestion(question: Question) {
         // Remove from data source; Room Flow will propagate changes
         questionDataSource.removeQuestion(question)
-        Log.d(
-            TAG,
-            "removeQuestion: removed=${question}, totalAfter (may not reflect removal yet)=${questionsStateFlow.value.size}"
-        )
+        // Log.d(
+        //     TAG,
+        //     "removeQuestion: removed=${question}, totalAfter (may not reflect removal yet)=${questionsStateFlow.value.size}"
+        // )
     }
 }
