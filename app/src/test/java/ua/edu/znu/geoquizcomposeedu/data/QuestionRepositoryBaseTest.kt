@@ -34,6 +34,8 @@ abstract class QuestionRepositoryBaseTest {
     /**
      * Awaits until the question repository has seeded questions in its StateFlow.
      * This is useful for tests that need to ensure the repository has initial data before proceeding.
+     * This method uses Turbine to collect from the StateFlow and waits until a non-empty list of questions is emitted.
+     * It cancels the collection after receiving the first non-empty list of questions.
      */
     protected suspend fun awaitQuestionsSeeded() {
         questionRepository.getQuestionListState().test {
