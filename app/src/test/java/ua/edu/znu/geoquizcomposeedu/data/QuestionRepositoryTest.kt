@@ -18,18 +18,15 @@ import java.lang.reflect.Field
  */
 class QuestionRepositoryTest {
     private lateinit var questionDao: QuestionDao
-    private lateinit var questionsFlow: MutableStateFlow<List<Question>>
     private lateinit var questionRepository: QuestionRepository
 
     @Before
     fun setUp() {
         // Reset the singleton instance before each test to ensure a clean state
         resetRepositorySingleton()
-        // Mock the QuestionDao and set up a MutableStateFlow to simulate the database flow
+        // Mock the QuestionDao
         questionDao = mockk()
-        questionsFlow = MutableStateFlow(emptyList())
-        every { questionDao.getQuestions() } returns questionsFlow
-        questionRepository = QuestionRepositoryImpl.getInstance(questionDao)
+        questionRepository = createRepositoryWithQuestions(emptyList())
     }
 
     @After
@@ -39,18 +36,43 @@ class QuestionRepositoryTest {
     }
 
     /**
-     * Tests that the getQuestionBankSize method returns the size of the initial state flow.
+     * Tests that the getQuestionByIndex method returns the correct question for a valid index.
      */
     @Test
-    fun getQuestionBankSize_returnsInitialStateFlowSize() {
-        questionsFlow.value = listOf(
+    fun getQuestionByIndex_returnsQuestionForValidIndex(): Unit = runTest {
+        questionRepository = createRepositoryWithQuestions(
+            listOf(
             Question(id = 1, questionText = "Q1", answer = true),
             Question(id = 2, questionText = "Q2", answer = false),
             Question(id = 3, questionText = "Q3", answer = true)
+            )
         )
+        // stateIn updates asynchronously; wait until repository StateFlow has seeded values
+        kotlinx.coroutines.yield()
+        val index = 1
+        val expectedQuestion = Question(id = 2, questionText = "Q2", answer = false)
+
+        val result = questionRepository.getQuestionByIndex(index)
+
+        assertEquals(expectedQuestion, result)
+    }
+
+    /**
+     * Tests that the getQuestionBankSize method returns the size of the initial state flow.
+     */
+    @Test
+    fun getQuestionBankSize_returnsInitialStateFlowSize(): Unit = runTest {
+        questionRepository = createRepositoryWithQuestions(
+            listOf(
+            Question(id = 1, questionText = "Q1", answer = true),
+            Question(id = 2, questionText = "Q2", answer = false),
+            Question(id = 3, questionText = "Q3", answer = true)
+            )
+        )
+        kotlinx.coroutines.yield()
         // The initial state flow is empty, so the size should be 0
         val result = questionRepository.getQuestionBankSize()
-        assertEquals(0, result)
+        assertEquals(3, result)
     }
 
     /**
@@ -103,6 +125,20 @@ class QuestionRepositoryTest {
         questionRepository.removeQuestion(question)
         // Verify that the DAO's removeQuestion method was called exactly once with the correct question
         coVerify(exactly = 1) { questionDao.removeQuestion(question) }
+    }
+
+    /**
+     * Creates a QuestionRepository instance with the provided list of questions.
+     * This method resets the singleton instance of QuestionRepositoryImpl to ensure a fresh instance for each test.
+     *
+     * @param questions The list of questions to initialize the repository with.
+     * @return A new instance of QuestionRepositoryImpl initialized with the provided questions.
+     */
+    private fun createRepositoryWithQuestions(questions: List<Question>): QuestionRepository {
+        resetRepositorySingleton()
+        val questionsFlow = MutableStateFlow(questions)
+        every { questionDao.getQuestions() } returns questionsFlow
+        return QuestionRepositoryImpl.getInstance(questionDao)
     }
 
     /**
