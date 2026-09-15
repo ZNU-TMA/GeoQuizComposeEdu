@@ -3,9 +3,11 @@ package ua.edu.znu.geoquizcomposeedu.data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlin.time.Duration.Companion.milliseconds
 
 //private const val TAG = "QuestionRepositoryImpl"
 
@@ -66,11 +68,14 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
             )
 
     override fun getQuestionListState(): StateFlow<List<Question>> {
+        Thread.sleep(100) // Simulate a delay for testing purposes; in production, avoid blocking the main thread
         return questionsStateFlow
     }
 
     // inside QuestionRepositoryImpl
     override suspend fun addQuestion(question: Question) {
+        // For suspend function use delay instead of Thread.sleep to avoid blocking the main thread
+        delay(100.milliseconds) // Simulate a delay for testing purposes
         // Insert into DB and let the Room Flow emit the changed list
         questionDataSource.addQuestion(question)
         // kept for debugging/logging if needed; do not try to maintain a separate in-memory list
