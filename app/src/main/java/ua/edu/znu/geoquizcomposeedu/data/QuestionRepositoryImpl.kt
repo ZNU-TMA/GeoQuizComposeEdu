@@ -45,14 +45,13 @@ class QuestionRepositoryImpl private constructor(private val questionDataSource:
     override fun getQuestionByIndex(index: Int): Question {
         // Accessing the questions from the StateFlow to ensure we get the latest data
         val list = getQuestionListState().value
-//        if (list.isEmpty()) {
-        if(list.isEmpty() || index < 0 || index >= list.size) {
-//            Log.d(TAG, "getQuestionByIndex: question list empty, returning empty Question")
-//            return Question(-1, "Жодного питання не було створено", true)
-            // Log.d(TAG, "getQuestionByIndex: index out of bounds, returning empty Question")
+        if (list.isEmpty()) {
+            throw NoSuchElementException("Question list is empty")
+        }
+        if (index < 0 || index >= list.size) {
             throw IndexOutOfBoundsException("Index out of bounds")
         }
-        return getQuestionListState().value[index]
+        return list[index]
     }
 
     override fun getQuestionBankSize() = getQuestionListState().value.size
