@@ -1,16 +1,10 @@
 package ua.edu.znu.geoquizcomposeedu.data
 
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import java.lang.reflect.Field
 
 /**
  * Parameterized unit tests for the QuestionRepositoryImpl class.
@@ -21,12 +15,9 @@ import java.lang.reflect.Field
 class ParameterizedQuestionRepositoryTest(
     private val index: Int,
     private val expectedQuestion: Question
-) {
+) : QuestionRepositoryBaseTest() {
 
-    private lateinit var questionDao: QuestionDao
-    private lateinit var questionRepository: QuestionRepository
-
-    companion object{
+    companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "Test {index}: index={0}, expectedQuestion={1}")
         fun data(): Collection<Array<Any>> {
@@ -38,21 +29,10 @@ class ParameterizedQuestionRepositoryTest(
         }
     }
 
-    @Before
-    fun setUp() {
-        // Reset the singleton instance before each test to ensure a clean state
-        resetRepositorySingleton()
-        // Mock the QuestionDao
-        questionDao = mockk()
-        questionRepository = createRepositoryWithQuestions(emptyList())
-    }
-
-    @After
-    fun tearDown() {
-        // Reset the singleton instance after each test to avoid side effects between tests
-        resetRepositorySingleton()
-    }
-
+    /**
+     * Tests that the getQuestionByIndex method returns the correct question for the provided index.
+     * This test uses parameterized inputs to verify the behavior for different indices and expected questions.
+     */
     @Test
     fun getQuestionByIndex_returnsQuestion(): Unit = runTest {
         questionRepository = createRepositoryWithQuestions(
@@ -62,35 +42,10 @@ class ParameterizedQuestionRepositoryTest(
                 Question(id = 3, questionText = "Q3", answer = true)
             )
         )
-        // stateIn updates asynchronously; wait until repository StateFlow has seeded values
-        kotlinx.coroutines.yield()
+
+        awaitQuestionsSeeded()
 
         val result = questionRepository.getQuestionByIndex(index)
-
         assertEquals(expectedQuestion, result)
-    }
-
-    /**
-     * Creates a QuestionRepository instance with the provided list of questions.
-     * This method resets the singleton instance of QuestionRepositoryImpl to ensure a fresh instance for each test.
-     *
-     * @param questions The list of questions to initialize the repository with.
-     * @return A new instance of QuestionRepositoryImpl initialized with the provided questions.
-     */
-    private fun createRepositoryWithQuestions(questions: List<Question>): QuestionRepository {
-        resetRepositorySingleton()
-        val questionsFlow = MutableStateFlow(questions)
-        every { questionDao.getQuestions() } returns questionsFlow
-        return QuestionRepositoryImpl.getInstance(questionDao)
-    }
-
-    /**
-     * Resets the singleton instance of QuestionRepositoryImpl to null using reflection.
-     * This is necessary to ensure that each test starts with a fresh instance of the repository.
-     */
-    private fun resetRepositorySingleton() {
-        val instanceField: Field = QuestionRepositoryImpl::class.java.getDeclaredField("instance")
-        instanceField.isAccessible = true
-        instanceField.set(null, null)
     }
 }

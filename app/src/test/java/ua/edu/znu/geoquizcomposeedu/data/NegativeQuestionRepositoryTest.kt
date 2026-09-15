@@ -2,43 +2,16 @@ package ua.edu.znu.geoquizcomposeedu.data
 
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
-import java.lang.reflect.Field
 
 /**
  * Unit tests for the QuestionRepositoryImpl class focusing on negative scenarios.
  * This test class uses MockK to mock the QuestionDao and verifies the behavior of the repository methods
  * when invalid inputs are provided or when the StateFlow has not been collected yet.
  */
-class NegativeQuestionRepositoryTest {
-
-    private lateinit var questionDao: QuestionDao
-    private lateinit var questionsFlow: MutableStateFlow<List<Question>>
-    private lateinit var questionRepository: QuestionRepository
-
-    @Before
-    fun setUp() {
-        // Reset the singleton instance before each test to ensure a clean state
-        resetRepositorySingleton()
-        // Mock the QuestionDao and set up a MutableStateFlow to simulate the database flow
-        questionDao = mockk()
-        questionsFlow = MutableStateFlow(emptyList())
-        every { questionDao.getQuestions() } returns questionsFlow
-        questionRepository = QuestionRepositoryImpl.getInstance(questionDao)
-    }
-
-    @After
-    fun tearDown() {
-        //Reset the singleton instance after each test to avoid side effects between tests
-        resetRepositorySingleton()
-    }
+class NegativeQuestionRepositoryTest : QuestionRepositoryBaseTest() {
 
     /**
      * Tests that the getQuestionByIndex method throws an IndexOutOfBoundsException
@@ -54,7 +27,7 @@ class NegativeQuestionRepositoryTest {
             )
         )
         // stateIn updates asynchronously; wait until repository StateFlow has seeded values
-        kotlinx.coroutines.yield()
+        awaitQuestionsSeeded()
         val index = 5 // Invalid index (out of bounds)
         val expectedQuestion = Question(id = 2, questionText = "Q2", answer = false)
 
@@ -90,29 +63,5 @@ class NegativeQuestionRepositoryTest {
         // Call the addQuestion method and verify that it completes within the timeout
         questionRepository.addQuestion(question)
         coVerify(exactly = 1) { questionDao.addQuestion(question) }
-    }
-
-    /**
-     * Creates a QuestionRepository instance with the provided list of questions.
-     * This method resets the singleton instance of QuestionRepositoryImpl to ensure a fresh instance for each test.
-     *
-     * @param questions The list of questions to initialize the repository with.
-     * @return A new instance of QuestionRepositoryImpl initialized with the provided questions.
-     */
-    private fun createRepositoryWithQuestions(questions: List<Question>): QuestionRepository {
-        resetRepositorySingleton()
-        val questionsFlow = MutableStateFlow(questions)
-        every { questionDao.getQuestions() } returns questionsFlow
-        return QuestionRepositoryImpl.getInstance(questionDao)
-    }
-
-    /**
-     * Resets the singleton instance of QuestionRepositoryImpl to null using reflection.
-     * This is necessary to ensure that each test starts with a fresh instance of the repository.
-     */
-    private fun resetRepositorySingleton() {
-        val instanceField: Field = QuestionRepositoryImpl::class.java.getDeclaredField("instance")
-        instanceField.isAccessible = true
-        instanceField.set(null, null)
     }
 }
