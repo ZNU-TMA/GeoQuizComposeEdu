@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,15 +29,13 @@ fun ComponentScreen(innerPadding: PaddingValues) {
         contentAlignment = Alignment.Center
     ) {
         Checkbox(
-//            checked = true,
             checked = state,
-            onCheckedChange = { newCheckedState ->
-                /* Handle checkbox state change */
-                state = newCheckedState
-            }
+            onCheckedChange = { state = it }
         )
     }
 }
+
+
 
 @Preview(showSystemUi = true)
 @Composable

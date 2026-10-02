@@ -1,5 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ data class MainScreenState(
     val questionList: List<Question> = emptyList()
 )
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun MainScreen(
     snackbarHostState: SnackbarHostState,

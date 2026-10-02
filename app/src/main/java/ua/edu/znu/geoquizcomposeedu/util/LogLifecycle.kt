@@ -14,6 +14,7 @@ fun logCompositionLifecycle(name: String): Any = remember {
 
 private class LifecycleRememberObserver(
     private val name: String) : RememberObserver {
+
     override fun onRemembered() {
         Log.d(TAG, "$name.onEnter")
     }
@@ -21,5 +22,6 @@ private class LifecycleRememberObserver(
     override fun onForgotten() {
         Log.d(TAG, "$name.onLeave")
     }
+
     override fun onAbandoned()=Unit
 }
