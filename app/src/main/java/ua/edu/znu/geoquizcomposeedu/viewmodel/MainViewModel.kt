@@ -10,7 +10,7 @@ import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.data.QuestionRepository
 import ua.edu.znu.geoquizcomposeedu.ui.screens.MainScreenState
 
-private const val TAG = "MainViewModel"
+//private const val TAG = "MainViewModel"
 
 // Pass QuestionRepository as a constructor parameter to MainViewModel
 // and assign it to a property.
@@ -57,7 +57,7 @@ class MainViewModel(private val questionRepository: QuestionRepository) : ViewMo
             currentIndex = (currentIndex + 1) % questionRepository.getQuestionBankSize()
         )
         currentIndex = _mainScreenState.value.currentIndex
-        Log.d(TAG, "MainViewModel.onNextQuestionButtonClick currentIndex: $currentIndex")
+//        Log.d(TAG, "MainViewModel.onNextQuestionButtonClick currentIndex: $currentIndex")
     }
 
     // Works correctly because it may is a pure function
