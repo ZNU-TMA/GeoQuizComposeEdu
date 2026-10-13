@@ -15,12 +15,13 @@ abstract class QuestionDatabase : RoomDatabase() {
         private var instance: QuestionDatabase? = null
         fun getInstance(context: Context): QuestionDatabase {
             return instance ?: synchronized(this) {
-                Room.databaseBuilder(
-                    context,
+                instance ?: Room.databaseBuilder(
+                    context.applicationContext,
                     QuestionDatabase::class.java,
                     "question_database"
                 )
-//                    .createFromAsset("database/question_database.db")
+                    // Copies the asset only when the DB file doesn't exist yet
+                    .createFromAsset("database/question_database.db")
                     .build()
                     .also { instance = it }
             }

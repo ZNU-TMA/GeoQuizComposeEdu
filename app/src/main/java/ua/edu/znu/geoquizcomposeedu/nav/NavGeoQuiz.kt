@@ -50,10 +50,13 @@ fun NavPassQuestion(
                 }
             )
             val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
+            // Room delivers questions asynchronously; the list is empty until the first emission
+            val questions by questionRepository.getQuestionListState()
+                .collectAsStateWithLifecycle()
             MainScreen(
                 snackbarHostState,
                 mainScreenState,
-                getQuestionText = { index -> mainViewModel.getQuestionByIndex(index).questionText },
+                getQuestionText = { index -> questions.getOrNull(index)?.questionText.orEmpty() },
                 onAnswerButtonClick = { answer -> mainViewModel.onAnswerButtonClick(answer) },
                 onNextQuestionButtonClick = { mainViewModel.onNextQuestionButtonClick() }
             )
@@ -91,6 +94,7 @@ fun NavPassQuestion(
                 initialQuestion = initialQuestion,
                 buttonTextRes = R.string.update_question,
                 questionViewModel = questionViewModel,
+                snackbarHostState = snackbarHostState,
                 onDone = onNavigateBack,
                 onRemoveDone = onNavigateBack
             )
@@ -105,6 +109,7 @@ fun NavPassQuestion(
                 initialQuestion = null,
                 buttonTextRes = R.string.add_question,
                 questionViewModel = questionViewModel,
+                snackbarHostState = snackbarHostState,
                 onDone = onNavigateBack
             )
         }

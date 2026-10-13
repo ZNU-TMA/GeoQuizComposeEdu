@@ -13,15 +13,11 @@ class QuestionViewModel(private val questionRepository: QuestionRepository) :
        and we relying only on initialQuestion. */
 //    val questionFlow = questionRepository.getQuestionState(question)
 
-    fun onAddQuestionClick(question: Question) =
-        viewModelScope.launch {
-            questionRepository.addQuestion(question)
-        }
+    suspend fun onAddQuestionClick(question: Question) =
+        questionRepository.addQuestion(question)
 
-    fun onUpdateQuestionClick(question: Question) =
-        viewModelScope.launch {
-            questionRepository.updateQuestion(question)
-        }
+    suspend fun onUpdateQuestionClick(question: Question) =
+        questionRepository.updateQuestion(question)
 
     fun onRemoveQuestionClick(question: Question) =
         viewModelScope.launch {
