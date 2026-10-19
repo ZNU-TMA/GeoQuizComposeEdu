@@ -28,23 +28,23 @@ android {
                 "proguard-rules.pro"
             )
         }
-        create("profile") {
-            initWith(getByName("debug"))
-            isDebuggable = false
-            isProfileable = true
-        }
+//        create("profile") {
+//            initWith(getByName("debug"))
+//            isDebuggable = false
+//            isProfileable = true
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlin {
-        jvmToolchain(11)
-    }
+//    kotlin {
+//        jvmToolchain(11)
+//    }
     buildFeatures {
         compose = true
     }
-    compileSdkMinor = 0
+//    compileSdkMinor = 0
 }
 
 dependencies {
@@ -67,11 +67,17 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)
+
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mockk)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
