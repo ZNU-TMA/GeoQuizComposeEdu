@@ -27,4 +27,6 @@
     <string name="is_true">Is true</string>
     <string name="remove_question">Remove</string>
     <string name="no_questions_available">No questions available</string>
+    <string name="question_text_empty">The question text can not be empty!</string>
+    <string name="question_text">Question text</string>
 </resources>

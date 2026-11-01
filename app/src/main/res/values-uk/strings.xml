@@ -27,4 +27,6 @@
     <string name="is_true">Це так?</string>
     <string name="remove_question">Видалити</string>
     <string name="no_questions_available">Немає доступних питань</string>
+    <string name="question_text_empty">Текст запитання не може бути порожнім!</string>
+    <string name="question_text">Текст питання</string>
 </resources>
