@@ -1,5 +1,6 @@
 package ua.edu.znu.geoquizcomposeedu.ui.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +31,7 @@ import kotlinx.coroutines.launch
 import ua.edu.znu.geoquizcomposeedu.R
 import ua.edu.znu.geoquizcomposeedu.data.Question
 import ua.edu.znu.geoquizcomposeedu.ui.theme.GeoQuizComposeEduTheme
+import ua.edu.znu.geoquizcomposeedu.util.TestTags
 
 private const val TAG = "MainScreen"
 
@@ -35,6 +40,7 @@ data class MainScreenState(
     val questionList: List<Question> = emptyList()
 )
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun MainScreen(
     snackbarHostState: SnackbarHostState,
@@ -90,6 +96,7 @@ fun MainScreen(
                         )
                     }
                 },
+                modifier = Modifier.testTag(TestTags.TRUE_BUTTON)
             ) {
                 Text(stringResource(id = R.string.true_button))
             }
@@ -104,15 +111,24 @@ fun MainScreen(
                         )
                     }
                 },
+                modifier = Modifier.testTag(TestTags.FALSE_BUTTON)
             ) {
                 Text(stringResource(id = R.string.false_button))
             }
         }
-        Button(onClick = {
+        Button(
+            onClick = {
 //            mainViewModel.onNextQuestionButtonClick()
-            onNextQuestionButtonClick()
-            Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
-        }) {
+                onNextQuestionButtonClick()
+                Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
+            },
+            modifier = Modifier
+                .testTag(TestTags.NEXT_QUESTION_BUTTON)
+                .semantics {
+                    contentDescription = "Click to go to the next question"
+                }
+
+        ) {
             Text(stringResource(id = R.string.next_button))
         }
     }

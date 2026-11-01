@@ -95,7 +95,7 @@ fun LazyListScope.listHeader() {
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
-                text = stringResource(R.string.question),
+                text = stringResource(R.string.question_text),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth(0.75f)
