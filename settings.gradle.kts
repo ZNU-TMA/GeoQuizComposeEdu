@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "GeoQuizComposeEdu"
 include(":app")
+include(":appium-tests")
