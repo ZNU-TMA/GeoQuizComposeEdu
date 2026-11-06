@@ -35,7 +35,7 @@ abstract class BaseTest {
         driver = AndroidDriver(serverUrl, capabilities)
 
         // Неявне очікування (якщо не використовуємо плагін element-wait)
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
+//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
     }
 
     @AfterEach

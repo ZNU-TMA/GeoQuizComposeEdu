@@ -7,6 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.navigation.compose.rememberNavController
 //import ua.edu.znu.geoquizcomposeedu.educational.UniDirectionalDataFlow
 import ua.edu.znu.geoquizcomposeedu.nav.NavPassQuestion
@@ -41,6 +44,10 @@ class MainActivity : ComponentActivity() {
                     snackbarHost = {
                         AppSnackbar(snackbarHostState = snackbarHostState)
                     },
+                    modifier = Modifier
+                        .semantics {
+                            testTagsAsResourceId = true
+                        }
                 ) { innerPadding ->
                     // main content
 //                    MainScreen(

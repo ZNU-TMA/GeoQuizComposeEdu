@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.appium.java.client)
     implementation(libs.selenium.java)
     testImplementation(libs.junit6.jupiter.engine)
+    testImplementation(libs.junit6.jupiter.params)
     testRuntimeOnly(libs.junit6.platform.launcher)
 }
 
