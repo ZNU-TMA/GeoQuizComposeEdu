@@ -58,7 +58,7 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .semantics { testTagsAsResourceId = true }
+//            .semantics { testTagsAsResourceId = true }
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

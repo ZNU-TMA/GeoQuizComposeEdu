@@ -58,6 +58,7 @@ appium-java-client = { group = "io.appium", name = "java-client", version.ref = 
 selenium-java = { group = "org.seleniumhq.selenium", name = "selenium-java", version.ref = "selenium" }
 junit6-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit6" }
 junit6-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit6" }
+junit6-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit6" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
