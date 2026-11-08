@@ -29,7 +29,7 @@ abstract class BaseTest {
         // Підключення до локального Appium-сервера
         val serverUrl = URI.create("http://127.0.0.1:4723").toURL()
         driver = AndroidDriver(serverUrl, capabilities)
-        driver.setSetting("disableIdLocatorAutocompletion", true)
+//        driver.setSetting("disableIdLocatorAutocompletion", true)
 
         // Неявне очікування (якщо не використовуємо плагін element-wait)
 //        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))

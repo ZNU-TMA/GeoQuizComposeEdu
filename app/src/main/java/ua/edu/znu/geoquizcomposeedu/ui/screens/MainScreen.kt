@@ -60,16 +60,19 @@ fun MainScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .semantics {
-                testTagsAsResourceId = true
-            }
+//            .semantics {
+//                testTagsAsResourceId = true
+//            }
     ) {
         Text(
             text = getQuestionText(mainScreenState.currentIndex),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(16.dp)
-                .testTag(TestTags.QUESTION_TEXT)
+//                .testTag(TestTags.QUESTION_TEXT)
+                .semantics {
+                    contentDescription = TestTags.QUESTION_TEXT
+                }
         )
         Row(
             modifier = Modifier.size(height = 80.dp, width = 200.dp),
@@ -86,7 +89,11 @@ fun MainScreen(
                         )
                     }
                 },
-                modifier = Modifier.testTag(TestTags.TRUE_BUTTON)
+                modifier = Modifier
+                    .semantics {
+                        contentDescription = TestTags.TRUE_BUTTON
+                    }
+//                    .testTag(TestTags.TRUE_BUTTON)
             ) {
                 Text(stringResource(id = R.string.true_button))
             }
@@ -101,7 +108,11 @@ fun MainScreen(
                         )
                     }
                 },
-                modifier = Modifier.testTag(TestTags.FALSE_BUTTON)
+                modifier = Modifier
+                    .semantics {
+                        contentDescription = TestTags.FALSE_BUTTON
+                    }
+//                    .testTag(TestTags.FALSE_BUTTON)
             ) {
                 Text(stringResource(id = R.string.false_button))
             }
@@ -113,9 +124,9 @@ fun MainScreen(
                 Log.d(TAG, "MainScreen: currentIndex = ${mainScreenState.currentIndex}")
             },
             modifier = Modifier
-                .testTag(TestTags.NEXT_QUESTION_BUTTON)
+//                .testTag(TestTags.NEXT_QUESTION_BUTTON)
                 .semantics {
-                    contentDescription = "Click to go to the next question"
+                    contentDescription = TestTags.NEXT_QUESTION_BUTTON
                 }
 
         ) {
