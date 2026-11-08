@@ -13,6 +13,7 @@ java {
 
 dependencies {
     // Автоматизація
+    testImplementation(project(":shared"))
     implementation(libs.appium.java.client)
     implementation(libs.selenium.java)
     testImplementation(libs.junit6.jupiter.engine)
