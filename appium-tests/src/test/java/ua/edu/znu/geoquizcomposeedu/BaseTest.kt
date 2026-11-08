@@ -5,7 +5,6 @@ import io.appium.java_client.android.options.UiAutomator2Options
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import java.net.URI
-import java.time.Duration
 
 /**
  * Base class for Appium tests.
@@ -26,9 +25,6 @@ abstract class BaseTest {
                     "../app/build/outputs/apk/debug/app-debug.apk"
                 ).canonicalPath
             )
-            // Налаштування для Jetpack Compose та стабільності
-            .setNoReset(false)
-            .setNewCommandTimeout(Duration.ofSeconds(60))
 
         // Підключення до локального Appium-сервера
         val serverUrl = URI.create("http://127.0.0.1:4723").toURL()

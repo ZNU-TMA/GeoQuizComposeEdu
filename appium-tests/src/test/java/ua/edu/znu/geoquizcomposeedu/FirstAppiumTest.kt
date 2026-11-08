@@ -30,7 +30,6 @@ class FirstAppiumTest {
                     "../app/build/outputs/apk/debug/app-debug.apk"
                 ).canonicalPath
             )
-            .setNoReset(false)
 
         // Підключення до локального Appium-сервера
         val serverUrl = URI.create("http://127.0.0.1:4723").toURL()
