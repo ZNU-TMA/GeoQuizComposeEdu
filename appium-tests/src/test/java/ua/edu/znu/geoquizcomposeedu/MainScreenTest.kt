@@ -3,13 +3,20 @@ package ua.edu.znu.geoquizcomposeedu
 import io.appium.java_client.AppiumBy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import ua.edu.znu.geoquizcomposeedu.util.TestTags
+
 
 class MainScreenTest : BaseTest() {
     @Test
     fun ifFirstQuestionDisplayed() {
         val firstQuestionText = "Канберра - це столиця Австралії"
+        // Compose Testing API: onNodeWithText(firstQuestionText).assertIsDisplayed()
+        //        val firstQuestionWebElement =
+//            driver.findElement(AppiumBy.xpath("//*[@text='$firstQuestionText']"))
         val firstQuestionWebElement =
-            driver.findElement(AppiumBy.xpath("//*[@resource-id='QuestionText']"))
+            driver.findElement(AppiumBy.id(TestTags.QUESTION_TEXT))
+//        val firstQuestionWebElement =
+//            driver.findElement(AppiumBy.xpath("//*[@resource-id='QuestionText']"))
         assertEquals(
             firstQuestionText,
             firstQuestionWebElement.text,
@@ -21,10 +28,10 @@ class MainScreenTest : BaseTest() {
     fun checkIfSecondQuestionDisplayedAfterClickingNextButton() {
         val secondQuestionText = "Тихий океан більший, аніж Атлантичний океан"
         val nextButton =
-            driver.findElement(AppiumBy.xpath("//*[@resource-id='NextQuestionButton']"))
+            driver.findElement(AppiumBy.id(TestTags.NEXT_QUESTION_BUTTON))
         nextButton.click()
         val secondQuestionWebElement =
-            driver.findElement(AppiumBy.xpath("//*[@resource-id='QuestionText']"))
+            driver.findElement(AppiumBy.id(TestTags.QUESTION_TEXT))
         assertEquals(
             secondQuestionText,
             secondQuestionWebElement.text,
@@ -36,11 +43,11 @@ class MainScreenTest : BaseTest() {
     fun checkIfFirstQuestionDisplayedAfterClickingNextButtonOnLastQuestion() {
         val firstQuestionText = "Канберра - це столиця Австралії"
         val nextButton =
-            driver.findElement(AppiumBy.xpath("//*[@resource-id='NextQuestionButton']"))
+            driver.findElement(AppiumBy.id(TestTags.NEXT_QUESTION_BUTTON))
         repeat(5) { nextButton.click() }
         nextButton.click()
         val firstQuestionWebElement =
-            driver.findElement(AppiumBy.xpath("//*[@resource-id='QuestionText']"))
+            driver.findElement(AppiumBy.id(TestTags.QUESTION_TEXT))
         assertEquals(
             firstQuestionText,
             firstQuestionWebElement.text,

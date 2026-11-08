@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,19 +55,21 @@ fun MainScreen(
     val context = LocalContext.current
 
     Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-//            .semantics { testTagsAsResourceId = true }
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(scrollState)
+            .semantics {
+                testTagsAsResourceId = true
+            }
     ) {
         Text(
             text = getQuestionText(mainScreenState.currentIndex),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(16.dp)
-                .testTag(TestTags.FIRST_QUESTION_TEXT)
+                .testTag(TestTags.QUESTION_TEXT)
         )
         Row(
             modifier = Modifier.size(height = 80.dp, width = 200.dp),
