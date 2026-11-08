@@ -60,7 +60,9 @@ fun MainScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .semantics { testTagsAsResourceId = true }
+            .semantics {
+                testTagsAsResourceId = true
+            }
     ) {
         Text(
             text = getQuestionText(mainScreenState.currentIndex),
