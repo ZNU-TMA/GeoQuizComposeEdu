@@ -45,9 +45,12 @@ class MainActivity : ComponentActivity() {
                         AppSnackbar(snackbarHostState = snackbarHostState)
                     },
                     modifier = Modifier
-                        .semantics {
-                            testTagsAsResourceId = true
-                        }
+                        // This modifier is used to set the semantics property for the Scaffold composable.
+                        // It ensures that the test tags are treated as resource IDs, which is useful for UI testing
+                        // and accessibility purposes.
+//                        .semantics {
+//                            testTagsAsResourceId = true
+//                        }
                 ) { innerPadding ->
                     // main content
 //                    MainScreen(
