@@ -3,7 +3,10 @@ package ua.edu.znu.geoquizcomposeedu
 import io.appium.java_client.AppiumBy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
 import ua.edu.znu.geoquizcomposeedu.util.TestTags
+import java.time.Duration
 
 
 class MainScreenTest : BaseTest() {
@@ -13,10 +16,13 @@ class MainScreenTest : BaseTest() {
         // Compose Testing API: onNodeWithText(firstQuestionText).assertIsDisplayed()
         //        val firstQuestionWebElement =
 //            driver.findElement(AppiumBy.xpath("//*[@text='$firstQuestionText']"))
-        val firstQuestionWebElement =
-            driver.findElement(AppiumBy.accessibilityId(TestTags.QUESTION_TEXT))
-//        val firstQuestionWebElement =
-//            driver.findElement(AppiumBy.xpath("//*[@resource-id='QuestionText']"))
+
+        // Add explicit wait to ensure the element is visible before asserting
+        val firstQuestionWebElement = WebDriverWait(driver, Duration.ofSeconds(15)).until(
+            ExpectedConditions.visibilityOfElementLocated(
+                AppiumBy.accessibilityId(TestTags.QUESTION_TEXT)
+            )
+        )
         assertEquals(
             firstQuestionText,
             firstQuestionWebElement.text,

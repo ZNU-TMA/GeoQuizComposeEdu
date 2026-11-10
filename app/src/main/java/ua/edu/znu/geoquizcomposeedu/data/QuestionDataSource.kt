@@ -5,6 +5,7 @@ package ua.edu.znu.geoquizcomposeedu.data
  * All state management and updates are centralized in the repository,
  * ensuring a single source of truth and observable state for your UI.
  */
+@Deprecated("Use Room database and QuestionRepository instead of this in-memory data source.")
 class QuestionDataSource {
 
     // Now list is mutable to allow removal/addition/update of questions
